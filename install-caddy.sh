@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Caddy 安装脚本
-# 适用于 Ubuntu/Debian 系统
+# 适用于 CentOS/RHEL/Alibaba Cloud Linux 系统
 
 set -e
 
@@ -29,7 +29,7 @@ echo "检测到操作系统: $OS"
 
 # 安装 Caddy
 if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
-    echo "开始安装 Caddy..."
+    echo "开始安装 Caddy (Debian/Ubuntu)..."
     
     # 安装依赖
     apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
@@ -44,15 +44,18 @@ if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
     apt update
     apt install -y caddy
     
-elif [ "$OS" = "centos" ] || [ "$OS" = "rhel" ] || [ "$OS" = "fedora" ]; then
-    echo "开始安装 Caddy..."
+elif [ "$OS" = "centos" ] || [ "$OS" = "rhel" ] || [ "$OS" = "fedora" ] || [ "$OS" = "alinux" ]; then
+    echo "开始安装 Caddy (CentOS/RHEL/Alibaba Cloud Linux)..."
+    
+    # 安装 EPEL 仓库（如果需要）
+    yum install -y epel-release || true
     
     # 添加 Caddy 仓库
-    dnf install -y 'dnf-command(copr)'
-    dnf copr enable -y @caddy/caddy
+    yum install -y yum-plugin-copr
+    yum copr enable -y @caddy/caddy
     
     # 安装 Caddy
-    dnf install -y caddy
+    yum install -y caddy
     
 else
     echo "不支持的操作系统: $OS"

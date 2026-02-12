@@ -41,7 +41,7 @@ echo -e "${YELLOW}[4/6] 部署前端文件...${NC}"
 mkdir -p $FRONTEND_DEPLOY_DIR
 
 # 备份旧版本（如果存在）
-if [ -d "$FRONTEND_DEPLOY_DIR/index.html" ]; then
+if [ -f "$FRONTEND_DEPLOY_DIR/index.html" ]; then
     BACKUP_DIR="$FRONTEND_DEPLOY_DIR.backup.$(date +%Y%m%d_%H%M%S)"
     echo "备份旧版本到: $BACKUP_DIR"
     cp -r $FRONTEND_DEPLOY_DIR $BACKUP_DIR
@@ -53,7 +53,7 @@ rm -rf $FRONTEND_DEPLOY_DIR/*
 cp -r $FRONTEND_BUILD_DIR/* $FRONTEND_DEPLOY_DIR/
 
 # 设置权限
-chown -R www-data:www-data $FRONTEND_DEPLOY_DIR
+chown -R www-data:www-data $FRONTEND_DEPLOY_DIR 2>/dev/null || chown -R caddy:caddy $FRONTEND_DEPLOY_DIR 2>/dev/null || true
 chmod -R 755 $FRONTEND_DEPLOY_DIR
 
 # 步骤5: 配置 Caddy
@@ -62,11 +62,7 @@ echo -e "${YELLOW}[5/6] 配置 Caddy...${NC}"
 # 检查 Caddy 是否安装
 if ! command -v caddy &> /dev/null; then
     echo -e "${RED}错误: Caddy 未安装${NC}"
-    echo "请先安装 Caddy:"
-    echo "  Ubuntu/Debian: sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https"
-    echo "                 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg"
-    echo "                 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list"
-    echo "                 sudo apt update && sudo apt install caddy"
+    echo "请先安装 Caddy: bash install-caddy.sh"
     exit 1
 fi
 
@@ -98,10 +94,10 @@ echo "  后端API: http://8.212.40.70/api"
 echo ""
 echo "检查服务状态:"
 echo "  Caddy: systemctl status caddy"
-echo "  后端: systemctl status ecex-backend"
+echo "  后端: docker ps | grep ecex-backend"
 echo ""
 echo "查看日志:"
 echo "  Caddy: journalctl -u caddy -f"
-echo "  后端: journalctl -u ecex-backend -f"
+echo "  后端: docker logs -f ecex-backend"
 echo ""
 
