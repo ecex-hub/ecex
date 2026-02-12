@@ -91,7 +91,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
-import productImage from '@/assets/images/助华专区01.png'
+import productImage from '@/assets/images/zone-card-01.png'
 import titleBack from '@/assets/icons/png/common/titleback.png'
 import barImage from '@/assets/icons/png/common/bar.png'
 import cIcon from '@/assets/icons/png/common/list.png'
