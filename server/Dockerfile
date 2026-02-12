@@ -46,10 +46,10 @@ WORKDIR /var/www/html
 
 # 只安装运行时必需的依赖
 RUN apt-get update && apt-get install -y \
-    libpng16-16 \
-    libonig5 \
+    libpng-dev \
+    libonig-dev \
     libxml2 \
-    libzip4 \
+    libzip-dev \
     supervisor \
     curl \
     gnupg \
