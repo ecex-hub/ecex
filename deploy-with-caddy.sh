@@ -15,11 +15,20 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# 配置变量
-PROJECT_DIR="/root/ecex"
+# 配置变量（自动检测项目目录）
+if [ -d "/opt/ecex" ]; then
+    PROJECT_DIR="/opt/ecex"
+elif [ -d "/root/ecex" ]; then
+    PROJECT_DIR="/root/ecex"
+else
+    PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+
 FRONTEND_BUILD_DIR="$PROJECT_DIR/vue/dist"
 FRONTEND_DEPLOY_DIR="/var/www/html/frontend"
 CADDY_CONFIG="/etc/caddy/Caddyfile"
+
+echo "项目目录: $PROJECT_DIR"
 
 # 步骤1: 拉取最新代码
 echo -e "${YELLOW}[1/6] 拉取最新代码...${NC}"
