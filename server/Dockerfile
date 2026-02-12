@@ -1,10 +1,12 @@
-# 使用官方PHP 8.1 FPM镜像作为基础镜像
-FROM php:8.1-fpm
+# ============================================
+# 阶段1: 构建阶段
+# ============================================
+FROM php:8.1-fpm AS builder
 
 # 设置工作目录
 WORKDIR /var/www/html
 
-# 安装系统依赖
+# 安装系统依赖和PHP扩展构建工具（一次性安装）
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -14,18 +16,48 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    supervisor \
+    && docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && pecl install redis-5.3.7 \
+    && docker-php-ext-enable redis \
     && rm -rf /var/lib/apt/lists/*
-
-# 安装PHP扩展
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
-# 安装Redis扩展
-RUN pecl install redis-5.3.7 \
-    && docker-php-ext-enable redis
 
 # 安装Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# 复制composer文件
+COPY composer.json composer.lock ./
+
+# 安装PHP依赖（利用Docker缓存）
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# 复制应用代码
+COPY . .
+
+# 初始化Yii环境为生产环境
+RUN php init --env=Production --overwrite=All --interactive=0
+
+# ============================================
+# 阶段2: 生产阶段
+# ============================================
+FROM php:8.1-fpm
+
+# 设置工作目录
+WORKDIR /var/www/html
+
+# 只安装运行时必需的依赖
+RUN apt-get update && apt-get install -y \
+    libpng16-16 \
+    libonig5 \
+    libxml2 \
+    libzip4 \
+    supervisor \
+    curl \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# 从构建阶段复制PHP扩展
+COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
 # 安装Caddy
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg \
@@ -34,18 +66,8 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --de
     && apt-get install -y caddy \
     && rm -rf /var/lib/apt/lists/*
 
-# 复制应用代码
-COPY . /var/www/html
-
-# 设置权限
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
-
-# 安装PHP依赖
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# 初始化Yii环境为生产环境（非交互式）
-RUN php init --env=Production --overwrite=All <<< "yes"
+# 从构建阶段复制应用代码和依赖
+COPY --from=builder --chown=www-data:www-data /var/www/html /var/www/html
 
 # 复制Caddyfile配置
 COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
@@ -61,6 +83,10 @@ RUN mkdir -p /var/www/html/backend/runtime \
 
 # 暴露端口
 EXPOSE 80 443
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
 
 # 启动Supervisor（管理Caddy和PHP-FPM）
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
