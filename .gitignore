@@ -1,0 +1,52 @@
+# 环境变量文件（包含敏感信息）
+.env
+.env.local
+.env.*.local
+server/.env
+vue/.env
+
+# 但保留示例文件
+!.env.example
+!server/.env.example
+!vue/.env.example
+!.env.production
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+
+# Runtime
+backend/runtime/*
+!backend/runtime/.gitkeep
+backend/web/assets/*
+!backend/web/assets/.gitkeep
+
+# Docker volumes
+mysql-data/
+redis-data/
+
+# Temporary files
+*.tmp
+*.temp
+

@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Runtime
+backend/runtime/*
+!backend/runtime/.gitkeep
+backend/web/assets/*
+!backend/web/assets/.gitkeep
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+tests
+codeception.yml
+

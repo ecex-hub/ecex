@@ -1,0 +1,3309 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "stock-api接口",
+        "description": "这是api相关接口",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://y2aa-backend.test/",
+            "description": "开发环境"
+        }
+    ],
+    "paths": {
+        "/account/modify": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "更改用户信息",
+                "description": "This API allows users to change their password.",
+                "operationId": "3223ca19de57d69fb3e2e470781d49d6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "oldPassword",
+                                    "newPassword"
+                                ],
+                                "properties": {
+                                    "oldPassword": {
+                                        "description": "The old password of the user",
+                                        "type": "string"
+                                    },
+                                    "newPassword": {
+                                        "description": "The new password for the user",
+                                        "type": "string"
+                                    },
+                                    "qq": {
+                                        "description": "qq",
+                                        "type": "string"
+                                    },
+                                    "wechat": {
+                                        "description": "微信",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully changed the password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "Response code",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/modify-pay": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "更改用户支付密码",
+                "description": "This API allows users to change their password.",
+                "operationId": "d4df22b360e95e5d184bae43e7b5d2d3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "oldPassword",
+                                    "newPassword"
+                                ],
+                                "properties": {
+                                    "oldPassword": {
+                                        "description": "不是必填项",
+                                        "type": "string"
+                                    },
+                                    "newPassword": {
+                                        "description": "The new password for the user",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully changed the password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "Response code",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/update-id-card": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "添加身份证",
+                "operationId": "692378ceaba0da2d26cfb2a2c11d44c2",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "realName": {
+                                        "description": "真实姓名",
+                                        "type": "string",
+                                        "example": "张三"
+                                    },
+                                    "IDCard": {
+                                        "description": "身份证号",
+                                        "type": "string",
+                                        "example": "123456789012345678"
+                                    },
+                                    "IDFrontUrl": {
+                                        "description": "身份证正面图片URL",
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://example.com/idcard/front.jpg"
+                                    },
+                                    "IDOppositeUrl": {
+                                        "description": "身份证反面图片URL",
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "http://example.com/idcard/back.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "nullable": true,
+                                            "description": "签到数据列表或其它返回数据",
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/bank-list": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "银行列表",
+                "operationId": "ea47d6ab3cb8705c9bc8eebd0a7b5c93",
+                "responses": {
+                    "200": {
+                        "description": "成功返回银行列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "description": "银行类型标识",
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "description": "银行名称",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/bank-card-bind": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "添加银行卡",
+                "operationId": "40cd6be8504cbeaa0357436e6931b5ad",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "bankNameId": {
+                                        "description": "银行ID",
+                                        "type": "integer",
+                                        "example": "123456789012345678"
+                                    },
+                                    "bankCard": {
+                                        "description": "银行卡号",
+                                        "type": "string",
+                                        "example": "644444"
+                                    },
+                                    "realName": {
+                                        "description": "真实姓名",
+                                        "type": "string",
+                                        "example": "张三"
+                                    },
+                                    "alipay_card": {
+                                        "description": "支付宝账号",
+                                        "type": "string",
+                                        "example": "12232323"
+                                    },
+                                    "pay_type": {
+                                        "description": "1-银行卡 2-支付宝",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "nullable": true,
+                                            "description": "签到数据列表或其它返回数据",
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/bank-card-list": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "获取用户绑定的银行卡列表",
+                "description": "Retrieve a paginated list of bank cards bound to the user.",
+                "operationId": "getBankCardBindings",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number to retrieve (starting from 1).",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "maximum": 100,
+                            "minimum": 1
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of bank card bindings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "HTTP status code",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "uid": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "bankName": {
+                                                        "type": "string",
+                                                        "example": "中国农业银行"
+                                                    },
+                                                    "bankCard": {
+                                                        "type": "string",
+                                                        "example": "weww ****  **** "
+                                                    },
+                                                    "subBranchName": {
+                                                        "type": "string",
+                                                        "example": "sdsd"
+                                                    },
+                                                    "real_name": {
+                                                        "type": "string",
+                                                        "example": "姓名"
+                                                    },
+                                                    "alipay_card": {
+                                                        "type": "string",
+                                                        "example": "支付宝账号"
+                                                    },
+                                                    "pay_type": {
+                                                        "type": "integer",
+                                                        "example": "1"
+                                                    },
+                                                    "itime": {
+                                                        "type": "integer",
+                                                        "example": 1735035101
+                                                    },
+                                                    "utime": {
+                                                        "type": "integer",
+                                                        "example": 1735035101
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/account/bank-card-del": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "删除用户的银行卡",
+                "description": "Unbind a user's bank card by its unique identifier.",
+                "operationId": "deleteBankCardBinding",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The unique identifier of the bank card binding to delete.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "nullable": true,
+                                            "description": "签到数据列表或其它返回数据",
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/index": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "获取用户信息",
+                "description": "根据用户ID获取用户的详细信息。",
+                "operationId": "getUserInfo",
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "响应状态码",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "响应消息",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "uid": {
+                                                            "description": "用户ID",
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "e_uid": {
+                                                            "description": "扩展用户ID",
+                                                            "type": "string",
+                                                            "example": ""
+                                                        },
+                                                        "avatar": {
+                                                            "description": "用户头像URL",
+                                                            "type": "string",
+                                                            "example": ""
+                                                        },
+                                                        "nickname": {
+                                                            "description": "用户昵称",
+                                                            "type": "string",
+                                                            "example": "千千阙歌"
+                                                        },
+                                                        "is_real": {
+                                                            "description": "真人认证 1-未认证 2-已认证",
+                                                            "type": "int",
+                                                            "example": 1
+                                                        },
+                                                        "account": {
+                                                            "description": "用户账号",
+                                                            "type": "string",
+                                                            "example": "18081077689"
+                                                        },
+                                                        "money": {
+                                                            "description": "账户余额",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 0
+                                                        },
+                                                        "pay_back": {
+                                                            "description": "返现金额",
+                                                            "type": "integer",
+                                                            "example": 0
+                                                        },
+                                                        "allowance": {
+                                                            "description": "津贴或补贴",
+                                                            "type": "integer",
+                                                            "example": 0
+                                                        },
+                                                        "dream_fund": {
+                                                            "description": "梦想基金",
+                                                            "type": "integer",
+                                                            "example": 20000
+                                                        },
+                                                        "has_pay_pwd": {
+                                                            "description": "true 存在支付密码",
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "qq": {
+                                                            "description": "qq",
+                                                            "type": "string",
+                                                            "example": 20000
+                                                        },
+                                                        "wechat": {
+                                                            "description": "微信",
+                                                            "type": "string",
+                                                            "example": false
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account/update": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "用户信息更新",
+                "operationId": "ce90556a68e34fbf84d6f7e80dfac33e",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "payPassword": {
+                                        "description": "支付密码",
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "nullable": true,
+                                            "description": "签到数据列表或其它返回数据",
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/address/add": {
+            "post": {
+                "tags": [
+                    "地址"
+                ],
+                "summary": "添加收货地址",
+                "operationId": "ac7c4f2eb1e5e9f55f019aa598da1a60",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "姓名",
+                                        "type": "string",
+                                        "example": "张三"
+                                    },
+                                    "phone": {
+                                        "description": "手机号",
+                                        "type": "string",
+                                        "example": "13259303333"
+                                    },
+                                    "address": {
+                                        "description": "地址",
+                                        "type": "string",
+                                        "example": "北京天安门"
+                                    },
+                                    "is_default": {
+                                        "description": "1-初始化 2-默认选中",
+                                        "type": "integral",
+                                        "example": "2"
+                                    },
+                                    "city_id": {
+                                        "description": "区ID",
+                                        "type": "integral",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/address/del": {
+            "post": {
+                "tags": [
+                    "地址"
+                ],
+                "summary": "删除收获地址",
+                "operationId": "7a2d1c845ff5bf9dcde0652755b19725",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "description": "主键",
+                                        "type": "integral",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/address/list": {
+            "post": {
+                "tags": [
+                    "地址"
+                ],
+                "summary": "收货地址列表",
+                "description": "Retrieve a paginated list of bank cards bound to the user.",
+                "operationId": "getBankCardBindings",
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of bank card bindings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "HTTP status code",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "李四"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string",
+                                                        "example": "13260339999"
+                                                    },
+                                                    "address": {
+                                                        "type": "string",
+                                                        "example": "北京朝阳区"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/address/edit": {
+            "post": {
+                "tags": [
+                    "地址"
+                ],
+                "summary": "修改收货地址",
+                "operationId": "012cddf88923c835478a5a4cd6c0e0ab",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "description": "主键",
+                                        "type": "integral",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "description": "名称",
+                                        "type": "string",
+                                        "example": "李四"
+                                    },
+                                    "phone": {
+                                        "description": "手机号",
+                                        "type": "string",
+                                        "example": "12223232"
+                                    },
+                                    "address": {
+                                        "description": "地址",
+                                        "type": "string",
+                                        "example": "北京"
+                                    },
+                                    "is_default": {
+                                        "description": "1-初始化 2-默认",
+                                        "type": "integral",
+                                        "example": 1
+                                    },
+                                    "city_id": {
+                                        "description": "区ID",
+                                        "type": "integral",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bill/convert": {
+            "post": {
+                "tags": [
+                    "账单"
+                ],
+                "summary": "回报钱包到充值余额",
+                "operationId": "e57c065952a04bd6a2a4a04a8109d83e",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "money": {
+                                        "description": "金额",
+                                        "type": "string",
+                                        "example": "1.00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bill/list": {
+            "post": {
+                "tags": [
+                    "账单"
+                ],
+                "summary": "账单列表",
+                "description": "Retrieve a paginated list of bank cards bound to the user.",
+                "operationId": "07707dc3cdbcde0f4792858d5106bc7c",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number to retrieve (starting from 1).",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "maximum": 100,
+                            "minimum": 1
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of bank card bindings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "HTTP status code",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "money": {
+                                                        "type": "integer",
+                                                        "example": "1.0"
+                                                    },
+                                                    "money_type": {
+                                                        "type": "integer",
+                                                        "example": "1"
+                                                    },
+                                                    "bill_unit": {
+                                                        "type": "integer",
+                                                        "example": "1"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/city/list": {
+            "post": {
+                "tags": [
+                    "地区管理"
+                ],
+                "summary": "城市三级分类",
+                "operationId": "74c8eacbc3fbe9bfb5c49c943569a623",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "地区ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功的操作",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "sub": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "sub": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "string"
+                                                                },
+                                                                "name": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/home/index": {
+            "post": {
+                "tags": [
+                    "首页"
+                ],
+                "summary": "首页列表",
+                "description": "获取首页的内容列表，包括轮播图、通知、新闻和视频等。",
+                "operationId": "getHomeIndex",
+                "responses": {
+                    "200": {
+                        "description": "成功响应",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "响应状态码",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "响应消息",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "carousel": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "description": "通知ID",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "title": {
+                                                                        "description": "通知标题",
+                                                                        "type": "string",
+                                                                        "example": "99"
+                                                                    },
+                                                                    "picUrl": {
+                                                                        "description": "图片",
+                                                                        "type": "string",
+                                                                        "example": "999"
+                                                                    },
+                                                                    "sort": {
+                                                                        "description": "排序",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "type": {
+                                                                        "description": "类型",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "itime": {
+                                                                        "description": "创建时间",
+                                                                        "type": "string",
+                                                                        "example": "0"
+                                                                    },
+                                                                    "utime": {
+                                                                        "description": "更新时间",
+                                                                        "type": "string",
+                                                                        "example": "0"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "notice": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "description": "通知ID",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "title": {
+                                                                        "description": "通知标题",
+                                                                        "type": "string",
+                                                                        "example": "99"
+                                                                    },
+                                                                    "content": {
+                                                                        "description": "通知内容",
+                                                                        "type": "string",
+                                                                        "example": "999"
+                                                                    },
+                                                                    "sort": {
+                                                                        "description": "排序",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "type": {
+                                                                        "description": "类型",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "itime": {
+                                                                        "description": "创建时间",
+                                                                        "type": "string",
+                                                                        "example": "0"
+                                                                    },
+                                                                    "utime": {
+                                                                        "description": "更新时间",
+                                                                        "type": "string",
+                                                                        "example": "0"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "news": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "description": "新闻ID",
+                                                                        "type": "string",
+                                                                        "example": "2"
+                                                                    },
+                                                                    "title": {
+                                                                        "description": "新闻标题",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "author": {
+                                                                        "description": "作者",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "coverUrl": {
+                                                                        "description": "封面图片URL",
+                                                                        "type": "string",
+                                                                        "format": "uri",
+                                                                        "example": "http://127.0.0.1:8199/1"
+                                                                    },
+                                                                    "content": {
+                                                                        "description": "新闻内容",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "type": {
+                                                                        "description": "类型",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "itime": {
+                                                                        "description": "创建时间戳",
+                                                                        "type": "integer",
+                                                                        "example": 1735022121
+                                                                    },
+                                                                    "utime": {
+                                                                        "description": "更新时间戳",
+                                                                        "type": "integer",
+                                                                        "example": 1735022121
+                                                                    },
+                                                                    "is_hot": {
+                                                                        "description": "1-默认 2-最热",
+                                                                        "type": "integer",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "is_new": {
+                                                                        "description": "1-默认 2-最新",
+                                                                        "type": "integer",
+                                                                        "example": "1"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "video": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "description": "视频ID",
+                                                                        "type": "string",
+                                                                        "example": "2"
+                                                                    },
+                                                                    "title": {
+                                                                        "description": "视频标题",
+                                                                        "type": "string",
+                                                                        "example": "nihoa "
+                                                                    },
+                                                                    "coverUrl": {
+                                                                        "description": "封面图片URL",
+                                                                        "type": "string",
+                                                                        "format": "uri",
+                                                                        "example": "http://127.0.0.1:8199/1"
+                                                                    },
+                                                                    "video_url": {
+                                                                        "description": "视频URL",
+                                                                        "type": "string",
+                                                                        "format": "uri",
+                                                                        "example": "http://127.0.0.1:8199/111"
+                                                                    },
+                                                                    "video_duration": {
+                                                                        "description": "视频时长",
+                                                                        "type": "string",
+                                                                        "example": "10"
+                                                                    },
+                                                                    "type": {
+                                                                        "description": "类型",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "itime": {
+                                                                        "description": "创建时间",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    },
+                                                                    "utime": {
+                                                                        "description": "更新时间",
+                                                                        "type": "string",
+                                                                        "example": "1"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "customer_service": {
+                                                            "description": "客服链接",
+                                                            "type": "string",
+                                                            "format": "uri",
+                                                            "example": "http://www.baidu.com"
+                                                        },
+                                                        "home_welfare_status": {
+                                                            "description": "首页福利状态",
+                                                            "type": "string",
+                                                            "example": "1"
+                                                        },
+                                                        "welfare_id": {
+                                                            "description": "福利ID链接",
+                                                            "type": "string",
+                                                            "format": "uri",
+                                                            "example": "http://www.baidu.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "发生错误时的响应",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "错误代码",
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "message": {
+                                            "description": "错误信息",
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/home/news": {
+            "post": {
+                "tags": [
+                    "首页"
+                ],
+                "summary": "新闻列表",
+                "description": "This API returns a paginated list of items.",
+                "operationId": "getItems",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number for pagination.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response with a list of items.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "2"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "author": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "coverUrl": {
+                                                                "type": "string",
+                                                                "example": "http://127.0.0.1:8199/1"
+                                                            },
+                                                            "content": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "itime": {
+                                                                "type": "string",
+                                                                "example": "1735022121"
+                                                            },
+                                                            "utime": {
+                                                                "type": "string",
+                                                                "example": "1735022121"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, missing or incorrect parameters."
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        },
+        "/home/video": {
+            "post": {
+                "tags": [
+                    "首页"
+                ],
+                "summary": "视频列表",
+                "description": "This API returns a paginated list of items with video details.",
+                "operationId": "getItems",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number for pagination.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response with a list of items.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "2"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "nihoa"
+                                                            },
+                                                            "coverUrl": {
+                                                                "type": "string",
+                                                                "example": "http://127.0.0.1:8199/1"
+                                                            },
+                                                            "video_url": {
+                                                                "type": "string",
+                                                                "example": "http://127.0.0.1:8199/111"
+                                                            },
+                                                            "video_duration": {
+                                                                "type": "string",
+                                                                "example": "10"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "itime": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "utime": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "is_hot": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            },
+                                                            "is_new": {
+                                                                "type": "string",
+                                                                "example": "1"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, missing or incorrect parameters."
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        },
+        "/login/index": {
+            "post": {
+                "tags": [
+                    "登录"
+                ],
+                "summary": "账号登录",
+                "description": "This endpoint allows users to log in and receive a login token.",
+                "operationId": "9c135a724e5f24cf75ad4aec21b695ff",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password",
+                                    "account"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "description": "User password",
+                                        "type": "string"
+                                    },
+                                    "account": {
+                                        "description": "User account (e.g., username or email)",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "login_token": {
+                                                    "description": "用于后续请求的身份验证令牌",
+                                                    "type": "string",
+                                                    "example": "PSlynQT9wtUCSZQdjZakx-3Yjnim1Add"
+                                                },
+                                                "uid": {
+                                                    "description": "用户ID",
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "e_uid": {
+                                                    "description": "用户别名ID",
+                                                    "type": "strig",
+                                                    "example": "111111111111"
+                                                },
+                                                "invite_code": {
+                                                    "description": "邀请码",
+                                                    "type": "string",
+                                                    "example": "67777d"
+                                                },
+                                                "is_real": {
+                                                    "description": "真人认证 1-默认 2-已认证",
+                                                    "type": "int",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notice/list": {
+            "post": {
+                "tags": [
+                    "通知"
+                ],
+                "summary": "公告",
+                "description": "This API returns a paginated list of items with video details.",
+                "operationId": "getItems",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number for pagination.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response with a list of items.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "2"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "nihoa"
+                                                            },
+                                                            "content": {
+                                                                "type": "string",
+                                                                "example": "你好"
+                                                            },
+                                                            "create_time": {
+                                                                "type": "string",
+                                                                "example": "2024-12-01"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notice/user-list": {
+            "post": {
+                "tags": [
+                    "通知"
+                ],
+                "summary": "用户通知",
+                "description": "This API returns a paginated list of items with video details.",
+                "operationId": "ac811a64c605b547d0deb234e53ce5ca",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number for pagination.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response with a list of items.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "2"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "nihoa"
+                                                            },
+                                                            "content": {
+                                                                "type": "string",
+                                                                "example": "你好"
+                                                            },
+                                                            "create_time": {
+                                                                "type": "string",
+                                                                "example": "2024-12-01"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notice/read": {
+            "post": {
+                "tags": [
+                    "通知"
+                ],
+                "summary": "读取",
+                "description": "读取",
+                "operationId": "0fb4a30777e84f75478862e9b5bbcb9d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The page number for pagination.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response with a list of items.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notice/all-read": {
+            "post": {
+                "tags": [
+                    "通知"
+                ],
+                "summary": "读取所有",
+                "description": "读取",
+                "operationId": "c9d6ceafe22837a4a47038239708cce7",
+                "responses": {
+                    "200": {
+                        "description": "A successful response with a list of items.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pay/index": {
+            "post": {
+                "tags": [
+                    "支付"
+                ],
+                "summary": "支付",
+                "description": "支付详情",
+                "operationId": "06d348ce710a97fba94f3b290d49c96a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "sys_id",
+                                    "moeny"
+                                ],
+                                "properties": {
+                                    "sys_id": {
+                                        "description": "支付渠道ID",
+                                        "type": "integral"
+                                    },
+                                    "money": {
+                                        "description": "金额",
+                                        "type": "integral"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/list": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "产品列表",
+                "description": "产品列表",
+                "operationId": "getHotAndPaginatedItems",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "hot_list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 4
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "nihao"
+                                                            },
+                                                            "price": {
+                                                                "type": "string",
+                                                                "example": "1.00"
+                                                            },
+                                                            "day": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "day_income": {
+                                                                "type": "string",
+                                                                "example": "111.00"
+                                                            },
+                                                            "allowance": {
+                                                                "type": "string",
+                                                                "example": "111.00"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 4
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "nihao"
+                                                            },
+                                                            "price": {
+                                                                "type": "string",
+                                                                "example": "1.00"
+                                                            },
+                                                            "day": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "day_income": {
+                                                                "type": "string",
+                                                                "example": "111.00"
+                                                            },
+                                                            "allowance": {
+                                                                "type": "string",
+                                                                "example": "111.00"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/info": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "产品详情",
+                "description": "产品详情",
+                "operationId": "getItemById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID of the item to fetch",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "nihao"
+                                                        },
+                                                        "price": {
+                                                            "type": "string",
+                                                            "example": "1.00"
+                                                        },
+                                                        "day": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "day_income": {
+                                                            "type": "string",
+                                                            "example": "111.00"
+                                                        },
+                                                        "allowance": {
+                                                            "type": "string",
+                                                            "example": "111.00"
+                                                        },
+                                                        "remark": {
+                                                            "type": "string",
+                                                            "example": "111"
+                                                        },
+                                                        "is_hot": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "sort": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "type": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "itime": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "utime": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/buy": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "产品购买",
+                "description": "产品购买",
+                "operationId": "96312e3817d389748e7bf363efd858d0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "主键ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "num",
+                        "in": "query",
+                        "description": "数量",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/user-list": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "用户产品列表",
+                "operationId": "getResourceList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "当前页码",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "每页大小",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "1-默认 2-完成",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功的响应",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "6"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "nihao"
+                                                    },
+                                                    "total_price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 1
+                                                    },
+                                                    "itime": {
+                                                        "type": "integer",
+                                                        "format": "unix-timestamp",
+                                                        "example": 1735108542
+                                                    },
+                                                    "type": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "create_time": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-12-25 14:35:42"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "无效的请求参数"
+                    },
+                    "500": {
+                        "description": "服务器内部错误"
+                    }
+                }
+            }
+        },
+        "/product/user-info": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "用户产品详情",
+                "description": "用户产品详情",
+                "operationId": "getItemById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID of the item to fetch",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "nihao"
+                                                        },
+                                                        "price": {
+                                                            "type": "string",
+                                                            "example": "1.00"
+                                                        },
+                                                        "day": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "day_income": {
+                                                            "type": "string",
+                                                            "example": "111.00"
+                                                        },
+                                                        "allowance": {
+                                                            "type": "string",
+                                                            "example": "111.00"
+                                                        },
+                                                        "total_price": {
+                                                            "type": "integer",
+                                                            "example": "111"
+                                                        },
+                                                        "num": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "type": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "income_price": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register/index": {
+            "post": {
+                "tags": [
+                    "注册"
+                ],
+                "summary": "注册用户",
+                "operationId": "cde54e6e52b35111b2a2403f66ac4840",
+                "requestBody": {
+                    "description": "User registration details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "account": {
+                                        "description": "手机号",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "密码",
+                                        "type": "string"
+                                    },
+                                    "invite_code": {
+                                        "description": "邀请码",
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    },
+                                    "nickname": {
+                                        "description": "名称",
+                                        "type": "string"
+                                    },
+                                    "IDCard": {
+                                        "description": "身份证号",
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "description": "验证码",
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "login_token": {
+                                                    "description": "用于后续请求的身份验证令牌",
+                                                    "type": "string",
+                                                    "example": "PSlynQT9wtUCSZQdjZakx-3Yjnim1Add"
+                                                },
+                                                "uid": {
+                                                    "description": "用户ID",
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "e_uid": {
+                                                    "description": "用户别名ID",
+                                                    "type": "strig",
+                                                    "example": "111111111111"
+                                                },
+                                                "invite_code": {
+                                                    "description": "邀请码",
+                                                    "type": "string",
+                                                    "example": "67777d"
+                                                },
+                                                "vipGrade": {
+                                                    "description": "vip等级，大于1则已实名认证",
+                                                    "type": "int",
+                                                    "example": 1
+                                                },
+                                                "is_real": {
+                                                    "description": "真人认证 1-默认 2-已认证",
+                                                    "type": "int",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register/code": {
+            "post": {
+                "tags": [
+                    "注册"
+                ],
+                "summary": "发送手机号",
+                "operationId": "2d9258462dfbe7f524c4752e6c31c74e",
+                "requestBody": {
+                    "description": "User registration details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "Phone number for registration",
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Verification code sent successfully."
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": "ok"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/receive": {
+            "post": {
+                "tags": [
+                    "签到"
+                ],
+                "summary": "签到",
+                "operationId": "ccd12904a8774ab1554c8b6db616c8ac",
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/upload": {
+            "post": {
+                "tags": [
+                    "签到"
+                ],
+                "summary": "会议签到",
+                "operationId": "4679289ca938afa6421845a491522691",
+                "requestBody": {
+                    "description": "User registration details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "图片地址",
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/list": {
+            "post": {
+                "tags": [
+                    "签到"
+                ],
+                "summary": "签到列表",
+                "operationId": "dcd11909435e9a6959e4759bda5ceb5f",
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "description": "1-未领取 2-已领取",
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "time": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2024-12-01"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "continuous_day": {
+                                                    "description": "连续日期",
+                                                    "type": "integer",
+                                                    "example": 0
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/meeting-list": {
+            "post": {
+                "tags": [
+                    "签到"
+                ],
+                "summary": "会议签到列表",
+                "operationId": "dd00c08d1de21eaa048b7fd1f751da91",
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "description": "1-未领取 2-已领取",
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "time": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2024-12-01"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "continuous_day": {
+                                                    "description": "连续日期",
+                                                    "type": "integer",
+                                                    "example": 0
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/notice": {
+            "post": {
+                "tags": [
+                    "签到"
+                ],
+                "summary": "会议签到通知",
+                "operationId": "b7b0e798912aa5bf34e03e96b77ae20a",
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "money": {
+                                                    "description": "金额",
+                                                    "type": "string",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/notice-clean": {
+            "post": {
+                "tags": [
+                    "签到"
+                ],
+                "summary": "会议签到通知取消",
+                "operationId": "33e9af8b481f30c20fd5a333c72b75af",
+                "responses": {
+                    "200": {
+                        "description": "成功返回签到数据列表",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sys/list": {
+            "post": {
+                "tags": [
+                    "支付"
+                ],
+                "summary": "支付列表",
+                "description": "Retrieve a paginated list of bank cards bound to the user.",
+                "operationId": "getBankCardBindings",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of bank card bindings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "HTTP status code",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "支付宝"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/team/list": {
+            "post": {
+                "tags": [
+                    "团队"
+                ],
+                "summary": "团队详情页",
+                "description": "根据指定的过滤条件获取用户列表。",
+                "operationId": "b42d1e865c547c730c2f082706cb9791",
+                "parameters": [
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "description": "用户等级",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "页码",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "每页大小",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keywords",
+                        "in": "query",
+                        "description": "关键词搜索",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功的操作",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "buy_product_money": {
+                                                    "type": "string",
+                                                    "example": "0"
+                                                },
+                                                "register_num": {
+                                                    "type": "string",
+                                                    "example": "10"
+                                                },
+                                                "list": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "uid": {
+                                                                "type": "string",
+                                                                "example": "6"
+                                                            },
+                                                            "account": {
+                                                                "type": "string",
+                                                                "example": "18081077690"
+                                                            },
+                                                            "nickname": {
+                                                                "type": "string",
+                                                                "example": "千千阙歌"
+                                                            },
+                                                            "itime": {
+                                                                "type": "string",
+                                                                "example": "0"
+                                                            },
+                                                            "buy_product_money": {
+                                                                "type": "string",
+                                                                "example": "0.00"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/img": {
+            "post": {
+                "tags": [
+                    "上传"
+                ],
+                "summary": "上传图片资源",
+                "description": "上传图片资源到服务器，并返回保存路径",
+                "operationId": "uploadImage",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "要上传的文件",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功上传文件",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "filePath": {
+                                                    "type": "string",
+                                                    "example": "uploads/images/example.jpg"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/withdrawal/add": {
+            "post": {
+                "tags": [
+                    "提现"
+                ],
+                "summary": "用户提现",
+                "operationId": "146623cbf89817e4ed778dd3ed69d0a0",
+                "requestBody": {
+                    "description": "用户所需信息",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "card_id": {
+                                        "description": "银行卡ID",
+                                        "type": "integral",
+                                        "example": 1
+                                    },
+                                    "money": {
+                                        "description": "金额",
+                                        "type": "integral",
+                                        "example": "50"
+                                    },
+                                    "payPassword": {
+                                        "description": "支付密码",
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功返回",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "操作成功"
+                                        },
+                                        "data": {
+                                            "type": "nullable",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/withdrawal/list": {
+            "post": {
+                "tags": [
+                    "提现"
+                ],
+                "summary": "提现列表",
+                "description": "Retrieve a paginated list of bank cards bound to the user.",
+                "operationId": "getBankCardBindings",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items per page.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page number for pagination.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "1-未支付 2-已支付",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of bank card bindings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "HTTP status code",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "description": "Response message",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "money": {
+                                                        "type": "string",
+                                                        "example": "3"
+                                                    },
+                                                    "type": {
+                                                        "type": "integral",
+                                                        "example": "1"
+                                                    },
+                                                    "pay_type": {
+                                                        "type": "integral",
+                                                        "example": "1-支付宝 3-银行卡"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
