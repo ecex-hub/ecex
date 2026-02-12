@@ -1,540 +1,443 @@
-# Docker 部署指南
+# ECEX项目部署指南
 
-本项目采用前后端分离架构，使用Docker容器化部署，前后端部署在不同服务器上，通过内网通信。
+> 适用于 Alibaba Cloud Linux 3.2104 LTS 64位系统
 
-## 架构说明
+本文档将指导你从零开始在阿里云服务器上部署ECEX项目。
 
-```
-┌─────────────────┐         内网          ┌─────────────────┐
-│   前端服务器     │ ◄──────────────────► │   后端服务器     │
-│  (Vue3 + Caddy) │   HTTP API 调用      │ (Yii2 + MySQL)  │
-│   Port: 80/443  │                      │   Port: 8080    │
-└─────────────────┘                      └─────────────────┘
-        │                                         │
-        │                                         │
-    公网访问                                  内网访问
-```
+---
 
-## 前置要求
+## 📋 前置要求
 
-### 两台服务器都需要安装：
-- Docker (>= 20.10)
-- Docker Compose (>= 2.0)
-- Git
+- ✅ 一台阿里云ECS服务器（Alibaba Cloud Linux 3.2104 LTS 64位）
+- ✅ 服务器已开放端口：80（前端）、8080（后端）
+- ✅ 有服务器的SSH登录权限
+- ✅ 有GitHub账号和访问权限
 
-### 网络要求：
-- 前端服务器：需要公网IP，开放80端口
-- 后端服务器：只需内网IP，开放8080端口给前端服务器
-- 两台服务器需要在同一内网或通过VPN互通
+---
 
-## 一、后端服务器部署
+## 第一步：连接到服务器
 
-### 1. 克隆代码仓库
+使用SSH连接到你的阿里云服务器：
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO/server
+ssh root@YOUR_SERVER_IP
 ```
 
-### 2. 配置环境变量
+> 💡 将 `YOUR_SERVER_IP` 替换为你的服务器公网IP地址
+
+---
+
+## 第二步：安装Docker
+
+### 2.1 更新系统
 
 ```bash
-cp .env.example .env
-nano .env
+# 更新软件包列表
+yum update -y
 ```
 
-修改以下配置：
-```env
+### 2.2 安装Docker
+
+```bash
+# 安装Docker
+yum install -y docker
+
+# 启动Docker服务
+systemctl start docker
+
+# 设置Docker开机自启
+systemctl enable docker
+
+# 验证Docker安装
+docker --version
+```
+
+你应该看到类似这样的输出：
+```
+Docker version 20.10.x, build xxxxx
+```
+
+### 2.3 安装Docker Compose
+
+```bash
+# 下载Docker Compose
+curl -L "https://github.com/docker/compose/releases/download/v2.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+# 添加执行权限
+chmod +x /usr/local/bin/docker-compose
+
+# 验证安装
+docker-compose --version
+```
+
+你应该看到类似这样的输出：
+```
+Docker Compose version v2.24.0
+```
+
+---
+
+## 第三步：配置防火墙
+
+### 3.1 开放必要端口
+
+```bash
+# 开放80端口（前端）
+firewall-cmd --permanent --add-port=80/tcp
+
+# 开放8080端口（后端）
+firewall-cmd --permanent --add-port=8080/tcp
+
+# 重载防火墙配置
+firewall-cmd --reload
+
+# 查看已开放的端口
+firewall-cmd --list-ports
+```
+
+### 3.2 配置阿里云安全组
+
+1. 登录阿里云控制台
+2. 进入 **云服务器ECS** → **实例**
+3. 点击你的实例 → **安全组** → **配置规则**
+4. 添加以下入方向规则：
+
+| 端口范围 | 授权对象 | 描述 |
+|---------|---------|------|
+| 80/80   | 0.0.0.0/0 | 前端HTTP |
+| 8080/8080 | 0.0.0.0/0 | 后端API |
+
+---
+
+## 第四步：登录GitHub Container Registry
+
+### 4.1 创建GitHub Personal Access Token
+
+1. 访问：https://github.com/settings/tokens
+2. 点击 **Generate new token (classic)**
+3. 勾选权限：
+   - ✅ `read:packages`
+4. 点击 **Generate token**
+5. **复制Token**（格式：`ghp_xxxxxxxxxxxx`）
+
+### 4.2 登录Docker Registry
+
+```bash
+# 登录GHCR（将YOUR_GITHUB_TOKEN替换为你的Token）
+echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u ecex-hub --password-stdin
+```
+
+成功后会显示：
+```
+Login Succeeded
+```
+
+---
+
+## 第五步：创建项目目录
+
+```bash
+# 创建项目目录
+mkdir -p /opt/ecex
+cd /opt/ecex
+
+# 创建必要的子目录
+mkdir -p server
+```
+
+---
+
+## 第六步：配置环境变量
+
+### 6.1 创建后端环境配置文件
+
+```bash
+# 创建.env文件
+cat > server/.env << 'EOF'
 # 数据库配置
-DB_HOST=mysql
-DB_PORT=3306
-DB_NAME=stock
-DB_USER=root
-DB_PASSWORD=YOUR_SECURE_PASSWORD  # 修改为强密码
+DB_HOST=your_database_host
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
 
-# Redis配置
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_DATABASE=0
+# 阿里云短信服务配置
+ALIYUN_ACCESS_KEY_ID=your_access_key_id
+ALIYUN_ACCESS_KEY_SECRET=your_access_key_secret
+EOF
 ```
 
-### 3. 启动服务
+### 6.2 编辑配置文件
 
 ```bash
-# 构建并启动所有服务（后端、MySQL、Redis）
-docker-compose up -d
-
-# 查看服务状态
-docker-compose ps
-
-# 查看日志
-docker-compose logs -f backend
+# 使用vi编辑器修改配置
+vi server/.env
 ```
 
-### 4. 初始化数据库
+按 `i` 进入编辑模式，修改以下内容：
 
-```bash
-# 进入后端容器
-docker-compose exec backend bash
+- `DB_HOST`: 你的数据库地址（如：rm-xxxxx.mysql.rds.aliyuncs.com）
+- `DB_NAME`: 数据库名称
+- `DB_USER`: 数据库用户名
+- `DB_PASSWORD`: 数据库密码
+- `ALIYUN_ACCESS_KEY_ID`: 阿里云AccessKey ID
+- `ALIYUN_ACCESS_KEY_SECRET`: 阿里云AccessKey Secret
 
-# 运行数据库迁移（如果有）
-php yii migrate
-
-# 退出容器
-exit
-```
-
-### 5. 验证后端服务
-
-```bash
-# 测试后端API是否正常
-curl http://localhost:8080
-
-# 或从前端服务器测试（替换为后端服务器内网IP）
-curl http://BACKEND_INTERNAL_IP:8080
-```
-
-### 6. 获取后端服务器内网IP
-
-```bash
-# 查看内网IP地址
-ip addr show
-# 或
-hostname -I
-```
-
-记录下内网IP，例如：`10.0.0.2`，后续前端配置需要使用。
+按 `ESC`，输入 `:wq`，按 `Enter` 保存退出。
 
 ---
 
-## 二、前端服务器部署
-
-### 1. 克隆代码仓库
+## 第七步：创建Docker Compose配置
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO/vue
-```
-
-### 2. 配置后端API地址
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-修改为后端服务器的内网地址：
-```env
-# 后端API地址（使用后端服务器的内网IP）
-VITE_API_BASE_URL=http://10.0.0.2:8080
-```
-
-**重要**：这里必须使用后端服务器的内网IP地址！
-
-### 3. 构建并启动前端服务
-
-```bash
-# 构建并启动前端服务
-docker-compose up -d
-
-# 查看服务状态
-docker-compose ps
-
-# 查看日志
-docker-compose logs -f frontend
-```
-
-### 4. 验证前端服务
-
-```bash
-# 本地测试
-curl http://localhost
-
-# 从外网访问（替换为前端服务器公网IP）
-curl http://YOUR_PUBLIC_IP
-```
-
----
-
-## 三、从GitHub拉取镜像部署（推荐）
-
-### 前提条件
-1. 代码已推送到GitHub
-2. GitHub Actions已自动构建镜像
-3. 服务器已登录GitHub Container Registry
-
-### 1. 登录GitHub Container Registry
-
-```bash
-# 创建GitHub Personal Access Token (需要read:packages权限)
-# 访问: https://github.com/settings/tokens
-
-# 登录
-echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
-```
-
-### 2. 后端服务器部署
-
-创建 `docker-compose.prod.yml`:
-
-```yaml
+# 创建docker-compose.yml文件
+cat > docker-compose.yml << 'EOF'
 version: '3.8'
 
 services:
-  frontend:
-    image: ghcr.io/YOUR_USERNAME/YOUR_REPO/frontend:latest
-    container_name: ecex-frontend
+  # 后端服务
+  backend:
+    image: ghcr.io/ecex-hub/ecex/backend:latest
+    container_name: ecex-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server/.env:/var/www/html/.env
     restart: unless-stopped
+    networks:
+      - ecex-network
+
+  # 前端服务
+  frontend:
+    image: ghcr.io/ecex-hub/ecex/frontend:latest
+    container_name: ecex-frontend
     ports:
       - "80:80"
+    restart: unless-stopped
     networks:
       - ecex-network
 
 networks:
   ecex-network:
     driver: bridge
-```
-
-启动服务：
-```bash
-docker-compose -f docker-compose.prod.yml pull
-docker-compose -f docker-compose.prod.yml up -d
+EOF
 ```
 
 ---
 
-## 四、更新部署
+## 第八步：拉取并启动服务
 
-### 后端更新
+### 8.1 拉取最新镜像
 
 ```bash
-cd YOUR_REPO/server
+# 拉取前端镜像
+docker pull ghcr.io/ecex-hub/ecex/frontend:latest
 
-# 拉取最新代码
-git pull origin main
-
-# 重新构建并启动
-docker-compose down
-docker-compose up -d --build
-
-# 或使用GitHub镜像
-docker-compose -f docker-compose.prod.yml pull
-docker-compose -f docker-compose.prod.yml up -d
+# 拉取后端镜像
+docker pull ghcr.io/ecex-hub/ecex/backend:latest
 ```
 
-### 前端更新
+### 8.2 启动所有服务
 
 ```bash
-cd YOUR_REPO/vue
+# 启动服务
+docker-compose up -d
 
-# 拉取最新代码
-git pull origin main
-
-# 重新构建并启动
-docker-compose down
-docker-compose up -d --build
-
-# 或使用GitHub镜像
-docker-compose -f docker-compose.prod.yml pull
-docker-compose -f docker-compose.prod.yml up -d
-```
-
----
-
-## 五、常用命令
-
-### 查看服务状态
-```bash
+# 查看服务状态
 docker-compose ps
 ```
 
-### 查看日志
+你应该看到类似这样的输出：
+```
+NAME                IMAGE                                    STATUS
+ecex-backend        ghcr.io/ecex-hub/ecex/backend:latest    Up
+ecex-frontend       ghcr.io/ecex-hub/ecex/frontend:latest   Up
+```
+
+### 8.3 查看日志
+
 ```bash
 # 查看所有服务日志
 docker-compose logs -f
 
-# 查看特定服务日志
+# 只查看后端日志
 docker-compose logs -f backend
+
+# 只查看前端日志
 docker-compose logs -f frontend
 ```
 
+按 `Ctrl+C` 退出日志查看。
+
+---
+
+## 第九步：验证部署
+
+### 9.1 验证后端服务
+
+```bash
+# 在服务器上测试
+curl http://localhost:8080
+
+# 从外网访问（替换为你的服务器公网IP）
+curl http://YOUR_SERVER_IP:8080
+```
+
+### 9.2 验证前端服务
+
+```bash
+# 在服务器上测试
+curl http://localhost
+
+# 从外网访问（替换为你的服务器公网IP）
+# 在浏览器中打开：
+http://YOUR_SERVER_IP
+```
+
+---
+
+## 第十步：常用管理命令
+
+### 查看服务状态
+
+```bash
+# 查看所有容器状态
+docker-compose ps
+
+# 查看容器资源使用情况
+docker stats
+```
+
 ### 重启服务
+
 ```bash
 # 重启所有服务
 docker-compose restart
 
-# 重启特定服务
+# 只重启后端
 docker-compose restart backend
+
+# 只重启前端
+docker-compose restart frontend
 ```
 
 ### 停止服务
+
 ```bash
 # 停止所有服务
 docker-compose down
 
-# 停止并删除数据卷（危险操作！）
+# 停止并删除所有数据（危险操作！）
 docker-compose down -v
 ```
 
-### 进入容器
+### 更新服务
+
 ```bash
-# 进入后端容器
-docker-compose exec backend bash
+# 拉取最新镜像
+docker-compose pull
 
-# 进入前端容器
-docker-compose exec frontend sh
+# 重新启动服务
+docker-compose up -d
+```
 
-# 进入MySQL容器
-docker-compose exec mysql mysql -uroot -p
+### 查看日志
+
+```bash
+# 查看最近100行日志
+docker-compose logs --tail=100
+
+# 实时查看日志
+docker-compose logs -f
+
+# 查看特定服务的日志
+docker-compose logs -f backend
 ```
 
 ---
 
-## 六、安全建议
+## 🎯 部署完成！
 
-### 1. 防火墙配置
+恭喜！你已经成功部署了ECEX项目！
 
-**后端服务器：**
-```bash
-# 只允许前端服务器访问8080端口
-sudo ufw allow from FRONTEND_INTERNAL_IP to any port 8080
-sudo ufw enable
-```
+### 访问地址
 
-**前端服务器：**
-```bash
-# 允许公网访问80端口
-sudo ufw allow 80/tcp
-sudo ufw enable
-```
+- **前端**: http://YOUR_SERVER_IP
+- **后端API**: http://YOUR_SERVER_IP:8080
 
-### 2. 修改默认密码
-- 修改MySQL root密码
-- 修改Redis密码（如需要）
-- 使用强密码策略
+### 下一步建议
 
-### 3. 启用HTTPS（推荐）
-```bash
-# Caddy会自动申请和续期SSL证书，无需手动配置！
-# 只需在Caddyfile中使用域名即可：
-
-# 编辑 vue/docker/caddy/Caddyfile
-your-domain.com {
-    root * /srv
-    file_server
-    encode gzip
-    try_files {path} /index.html
-}
-
-# 编辑 server/docker/caddy/Caddyfile
-api.your-domain.com {
-    root * /var/www/html/backend/web
-    php_fastcgi localhost:9000
-    file_server
-    encode gzip
-}
-
-# 重新构建并启动，Caddy会自动申请Let's Encrypt证书
-docker-compose up -d --build
-```
-
-### 4. 定期备份
-```bash
-# 备份MySQL数据
-docker-compose exec mysql mysqldump -uroot -p stock > backup_$(date +%Y%m%d).sql
-
-# 备份整个数据卷
-docker run --rm -v ecex_mysql-data:/data -v $(pwd):/backup alpine tar czf /backup/mysql-backup.tar.gz /data
-```
+1. **配置域名**：将域名解析到服务器IP
+2. **启用HTTPS**：Caddy会自动申请SSL证书
+3. **定期备份**：备份数据库和配置文件
+4. **监控服务**：定期查看日志和服务状态
 
 ---
 
-## 七、故障排查
+## ⚠️ 故障排查
 
-### 1. 后端无法连接数据库
-```bash
-# 检查MySQL是否运行
-docker-compose ps mysql
+### 问题1：容器无法启动
 
-# 查看MySQL日志
-docker-compose logs mysql
-
-# 检查环境变量
-docker-compose exec backend env | grep DB_
-```
-
-### 2. 前端无法访问后端API
-```bash
-# 从前端服务器测试后端连接
-curl http://BACKEND_INTERNAL_IP:8080
-
-# 检查网络连通性
-ping BACKEND_INTERNAL_IP
-
-# 检查防火墙规则
-sudo ufw status
-```
-
-### 3. 容器启动失败
 ```bash
 # 查看详细错误信息
 docker-compose logs backend
 
-# 检查端口占用
-sudo netstat -tulpn | grep :8080
+# 检查端口是否被占用
+netstat -tulpn | grep :8080
+netstat -tulpn | grep :80
+```
+
+### 问题2：无法访问服务
+
+```bash
+# 检查防火墙状态
+firewall-cmd --list-ports
+
+# 检查容器是否运行
+docker-compose ps
+
+# 检查阿里云安全组规则
+# 登录阿里云控制台检查
+```
+
+### 问题3：数据库连接失败
+
+```bash
+# 检查环境变量
+cat server/.env
+
+# 测试数据库连接
+# 进入后端容器
+docker-compose exec backend bash
+
+# 在容器内测试
+ping your_database_host
+```
+
+### 问题4：镜像拉取失败
+
+```bash
+# 检查登录状态
+docker login ghcr.io
+
+# 重新登录
+echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u ecex-hub --password-stdin
+
+# 手动拉取镜像
+docker pull ghcr.io/ecex-hub/ecex/backend:latest
+docker pull ghcr.io/ecex-hub/ecex/frontend:latest
 ```
 
 ---
 
-## 八、监控和维护
-
-### 1. 资源监控
-```bash
-# 查看容器资源使用情况
-docker stats
-
-# 查看磁盘使用
-df -h
-docker system df
-```
-
-### 2. 日志管理
-```bash
-# 清理旧日志
-docker-compose logs --tail=100 backend > backend.log
-truncate -s 0 $(docker inspect --format='{{.LogPath}}' ecex-backend)
-```
-
-### 3. 定期清理
-```bash
-# 清理未使用的镜像
-docker image prune -a
-
-# 清理未使用的容器
-docker container prune
-
-# 清理未使用的卷
-docker volume prune
-```
-
----
-
-## 九、联系支持
+## 📞 获取帮助
 
 如遇到问题，请提供以下信息：
-1. 服务器系统版本：`cat /etc/os-release`
+
+1. 系统版本：`cat /etc/os-release`
 2. Docker版本：`docker --version`
 3. 错误日志：`docker-compose logs`
-4. 网络配置：`ip addr show`
+4. 服务状态：`docker-compose ps`
 
 ---
 
-## 附录：完整部署检查清单
-
-### 后端服务器
-- [ ] 安装Docker和Docker Compose
-- [ ] 克隆代码仓库
-- [ ] 配置.env文件
-- [ ] 启动docker-compose
-- [ ] 初始化数据库
-- [ ] 验证API可访问
-- [ ] 记录内网IP地址
-- [ ] 配置防火墙规则
-
-### 前端服务器
-- [ ] 安装Docker和Docker Compose
-- [ ] 克隆代码仓库
-- [ ] 配置后端API地址（内网IP）
-- [ ] 启动docker-compose
-- [ ] 验证前端可访问
-- [ ] 配置防火墙规则
-- [ ] （可选）配置HTTPS
-
-### GitHub配置
-- [ ] 推送代码到GitHub
-- [ ] 验证GitHub Actions运行成功
-- [ ] 检查镜像已推送到GHCR
-- [ ] 配置Personal Access Token
-- [ ] 服务器登录GHCR
-
----
-
-**部署完成！** 🎉
-
----
-
-## 三、从GitHub拉取镜像部署（推荐）
-
-### 前提条件
-1. 代码已推送到GitHub
-2. GitHub Actions已自动构建镜像
-3. 服务器已登录GitHub Container Registry
-
-### 1. 登录GitHub Container Registry
-
-```bash
-# 创建GitHub Personal Access Token (需要read:packages权限)
-# 访问: https://github.com/settings/tokens
-
-# 登录
-echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
-```
-
-### 2. 后端服务器部署
-
-创建 `docker-compose.prod.yml`:
-
-```yaml
-version: '3.8'
-
-services:
-  backend:
-    image: ghcr.io/YOUR_USERNAME/YOUR_REPO/backend:latest
-    container_name: ecex-backend
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    env_file:
-      - .env
-    networks:
-      - ecex-network
-    depends_on:
-      - mysql
-      - redis
-
-  mysql:
-    image: mysql:8.0
-    container_name: ecex-mysql
-    restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - ecex-network
-
-  redis:
-    image: redis:7-alpine
-    container_name: ecex-redis
-    restart: unless-stopped
-    volumes:
-      - redis-data:/data
-    networks:
-      - ecex-network
-
-networks:
-  ecex-network:
-    driver: bridge
-
-volumes:
-  mysql-data:
-  redis-data:
-```
-
-启动服务：
-```bash
-docker-compose -f docker-compose.prod.yml pull
-docker-compose -f docker-compose.prod.yml up -d
-```
-
+**祝你部署顺利！** 🚀
