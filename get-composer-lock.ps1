@@ -45,10 +45,10 @@ if (Test-Path $LOCAL_PATH) {
     Write-Host "文件路径: $LOCAL_PATH" -ForegroundColor Green
     Write-Host "文件大小: $fileSize 字节" -ForegroundColor Green
     Write-Host ""
-    Write-Host "下一步:" -ForegroundColor Cyan
-    Write-Host "  1. 检查文件内容: cat server/composer.lock" -ForegroundColor White
-    Write-Host "  2. 提交到 Git: git add server/composer.lock" -ForegroundColor White
-    Write-Host "  3. 推送代码: git commit -m '添加 composer.lock' && git push" -ForegroundColor White
+    Write-Host "Next steps:" -ForegroundColor Cyan
+    Write-Host "  1. Check file: cat server/composer.lock" -ForegroundColor White
+    Write-Host "  2. Add to Git: git add server/composer.lock" -ForegroundColor White
+    Write-Host "  3. Commit and push: git commit -m 'Add composer.lock' && git push" -ForegroundColor White
     Write-Host ""
 } else {
     Write-Host "错误: 文件未找到" -ForegroundColor Red
