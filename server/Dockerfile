@@ -38,8 +38,10 @@ RUN composer install \
     --optimize-autoloader \
     --no-interaction \
     --prefer-dist \
-    --verbose \
-    2>&1 | tee /tmp/composer-install.log || (cat /tmp/composer-install.log && exit 1)
+    --verbose
+
+# 验证 vendor 目录已创建
+RUN ls -la /var/www/html/vendor/ && echo "✓ vendor directory created successfully"
 
 # 初始化Yii环境为生产环境
 RUN php init --env=Production --overwrite=All --interactive=0 || true
