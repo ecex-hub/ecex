@@ -57,12 +57,12 @@ RUN echo "Checking composer files..." && \
 RUN if [ -f "composer.lock" ]; then \
         echo "composer.lock found, validating..."; \
         composer validate --no-check-all --no-check-publish || { \
-            echo "Validation failed, updating composer.lock..."; \
-            composer update --lock --no-interaction; \
+            echo "Validation failed, updating composer.lock with all dependencies..."; \
+            composer update --lock --no-interaction --with-all-dependencies; \
         }; \
     else \
         echo "No composer.lock found, running composer update..."; \
-        composer update --no-interaction --prefer-dist --verbose; \
+        composer update --no-interaction --prefer-dist --verbose --with-all-dependencies; \
     fi
 
 # 安装PHP依赖
