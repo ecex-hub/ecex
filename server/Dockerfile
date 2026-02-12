@@ -43,29 +43,9 @@ RUN composer --version && \
 # 检查 composer.json 和 composer.lock
 RUN echo "Checking composer files..." && \
     ls -la composer.* && \
-    echo "========================================" && \
-    echo "composer.json content-hash:" && \
-    cat composer.json | grep -A 5 '"name"' && \
-    echo "========================================" && \
-    if [ -f "composer.lock" ]; then \
-        echo "composer.lock content-hash:" && \
-        cat composer.lock | grep -A 2 '"content-hash"'; \
-    fi && \
     echo "========================================"
 
-# 如果 composer.lock 存在但 hash 不匹配，更新它
-RUN if [ -f "composer.lock" ]; then \
-        echo "composer.lock found, validating..."; \
-        composer validate --no-check-all --no-check-publish || { \
-            echo "Validation failed, updating composer.lock with all dependencies..."; \
-            composer update --lock --no-interaction --with-all-dependencies; \
-        }; \
-    else \
-        echo "No composer.lock found, running composer update..."; \
-        composer update --no-interaction --prefer-dist --verbose --with-all-dependencies; \
-    fi
-
-# 安装PHP依赖
+# 安装PHP依赖（忽略平台要求和锁定文件验证）
 RUN echo "========================================" && \
     echo "Running composer install..." && \
     echo "========================================" && \
@@ -74,6 +54,8 @@ RUN echo "========================================" && \
         --no-interaction \
         --prefer-dist \
         --no-dev \
+        --ignore-platform-reqs \
+        --no-scripts \
         --verbose && \
     echo "========================================" && \
     echo "Composer install completed" && \
