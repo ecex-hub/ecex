@@ -32,13 +32,16 @@ RUN composer config --global process-timeout 2000 \
     && composer config --global --no-plugins allow-plugins.yiisoft/yii2-composer true \
     && composer config --global --no-plugins allow-plugins true
 
-# 安装PHP依赖
+# 安装PHP依赖（先不使用 --no-dev 以便调试）
 RUN composer install \
-    --no-dev \
     --optimize-autoloader \
     --no-interaction \
     --prefer-dist \
-    --verbose
+    --verbose || { \
+        echo "Composer install failed!"; \
+        cat /root/.composer/cache.log 2>/dev/null || true; \
+        exit 1; \
+    }
 
 # 验证 vendor 目录已创建
 RUN ls -la /var/www/html/vendor/ && echo "✓ vendor directory created successfully"

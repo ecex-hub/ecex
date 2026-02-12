@@ -1,0 +1,89 @@
+# 生产环境 Caddy 配置
+# 统一通过公网IP访问，反向代理到内网服务
+
+# 监听 80 端口
+:80 {
+    # API 反向代理到后端 Spring Boot (内网 172.16.0.87:8080)
+    handle /api/* {
+        # 去掉 /api 前缀
+        uri strip_prefix /api
+        
+        # 反向代理到后端
+        reverse_proxy 172.16.0.87:8080 {
+            # 健康检查
+            health_uri /actuator/health
+            health_interval 10s
+            health_timeout 5s
+            
+            # 请求头设置
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+        
+        # 日志
+        log {
+            output stdout
+            format console
+        }
+    }
+    
+    # 前端静态文件服务
+    handle {
+        # 前端构建产物目录
+        root * /var/www/html/frontend
+        
+        # 启用文件服务
+        file_server
+        
+        # 启用Gzip压缩
+        encode gzip
+        
+        # Vue Router的history模式支持
+        try_files {path} /index.html
+        
+        # 静态资源缓存
+        @static {
+            path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+        }
+        header @static Cache-Control "public, max-age=31536000, immutable"
+        
+        # 日志
+        log {
+            output stdout
+            format console
+        }
+    }
+}
+
+# 如果有域名，可以启用 HTTPS（Caddy 会自动申请证书）
+# your-domain.com {
+#     # API 反向代理
+#     handle /api/* {
+#         uri strip_prefix /api
+#         reverse_proxy 172.16.0.87:8080 {
+#             health_uri /actuator/health
+#             health_interval 10s
+#             health_timeout 5s
+#             header_up Host {upstream_hostport}
+#             header_up X-Real-IP {remote_host}
+#             header_up X-Forwarded-For {remote_host}
+#             header_up X-Forwarded-Proto {scheme}
+#         }
+#     }
+#     
+#     # 前端静态文件
+#     handle {
+#         root * /var/www/html/frontend
+#         file_server
+#         encode gzip
+#         try_files {path} /index.html
+#         
+#         @static {
+#             path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+#         }
+#         header @static Cache-Control "public, max-age=31536000, immutable"
+#     }
+# }
+

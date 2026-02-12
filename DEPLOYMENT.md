@@ -9,9 +9,35 @@
 ## 📋 前置要求
 
 - ✅ 一台阿里云ECS服务器（Alibaba Cloud Linux 3.2104 LTS 64位）
-- ✅ 服务器已开放端口：80（前端）、8080（后端）
+- ✅ 服务器已开放端口：80（HTTP）、443（HTTPS，可选）
 - ✅ 有服务器的SSH登录权限
 - ✅ 有GitHub账号和访问权限
+
+## 🏗️ 架构说明
+
+### 使用 Caddy 反向代理方案（推荐）
+
+```
+                    公网 IP: 8.212.40.70
+                            |
+                    +-------+-------+
+                    |    Caddy      |  (监听 :80)
+                    |  反向代理      |
+                    +-------+-------+
+                            |
+            +---------------+---------------+
+            |                               |
+    前端静态文件                      后端 API
+    /var/www/html/frontend          172.16.0.87:8080
+    (Vue.js SPA)                    (Spring Boot)
+```
+
+**优势**:
+- ✅ 统一入口：前端和后端都通过公网 IP 访问
+- ✅ 路径分离：前端访问 `/`，后端 API 访问 `/api/*`
+- ✅ 安全性：后端不直接暴露到公网，只需开放 80 端口
+- ✅ 易扩展：可轻松添加 HTTPS、负载均衡等
+- ✅ 自动 HTTPS：Caddy 可自动申请和续期 SSL 证书
 
 ---
 
@@ -155,14 +181,20 @@ mkdir -p server
 # 创建.env文件
 cat > server/.env << 'EOF'
 # 数据库配置
-DB_HOST=your_database_host
-DB_NAME=your_database_name
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=stock
+DB_USER=root
+DB_PASSWORD=SecurePassword123!
 
-# 阿里云短信服务配置
-ALIYUN_ACCESS_KEY_ID=your_access_key_id
-ALIYUN_ACCESS_KEY_SECRET=your_access_key_secret
+# Redis配置
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_DATABASE=0
+
+# 应用配置
+YII_ENV=Production
+YII_DEBUG=false
 EOF
 ```
 
@@ -437,6 +469,170 @@ docker pull ghcr.io/ecex-hub/ecex/frontend:latest
 2. Docker版本：`docker --version`
 3. 错误日志：`docker-compose logs`
 4. 服务状态：`docker-compose ps`
+
+---
+
+## 🔄 使用 Caddy 反向代理部署（推荐方案）
+
+### 为什么使用 Caddy？
+
+相比直接暴露后端端口，使用 Caddy 反向代理有以下优势：
+
+1. **统一访问入口**：前端和后端都通过公网 IP 访问，避免跨域问题
+2. **安全性更高**：后端服务不直接暴露到公网
+3. **自动 HTTPS**：Caddy 可自动申请和续期 SSL 证书
+4. **配置简单**：Caddyfile 配置语法简洁易懂
+5. **性能优秀**：内置 HTTP/2、Gzip 压缩等优化
+
+### 部署步骤
+
+#### 1. 安装 Caddy
+
+```bash
+# SSH 登录到服务器
+ssh root@8.212.40.70
+
+# 进入项目目录
+cd /root/ecex
+
+# 拉取最新代码
+git pull origin main
+
+# 运行 Caddy 安装脚本
+bash install-caddy.sh
+```
+
+#### 2. 确保后端服务运行
+
+```bash
+# 检查后端服务状态
+systemctl status ecex-backend
+
+# 如果未运行，启动后端
+systemctl start ecex-backend
+
+# 测试后端是否可访问（内网）
+curl http://172.16.0.87:8080/actuator/health
+```
+
+#### 3. 部署前端并配置 Caddy
+
+```bash
+# 运行部署脚本（会自动构建前端、配置 Caddy）
+bash deploy-with-caddy.sh
+```
+
+#### 4. 验证部署
+
+```bash
+# 检查 Caddy 状态
+systemctl status caddy
+
+# 测试前端访问
+curl http://8.212.40.70
+
+# 测试后端 API 访问（通过 Caddy 代理）
+curl http://8.212.40.70/api/actuator/health
+```
+
+### 访问地址
+
+- **前端**: http://8.212.40.70
+- **后端 API**: http://8.212.40.70/api
+
+### Caddy 常用命令
+
+```bash
+# 启动 Caddy
+systemctl start caddy
+
+# 停止 Caddy
+systemctl stop caddy
+
+# 重启 Caddy
+systemctl restart caddy
+
+# 查看状态
+systemctl status caddy
+
+# 查看日志
+journalctl -u caddy -f
+
+# 重新加载配置（无需重启）
+systemctl reload caddy
+
+# 验证配置文件
+caddy validate --config /etc/caddy/Caddyfile
+```
+
+### 故障排查
+
+#### 问题1：API 请求超时
+
+```bash
+# 1. 检查后端是否运行
+systemctl status ecex-backend
+
+# 2. 测试后端直接访问
+curl http://172.16.0.87:8080/actuator/health
+
+# 3. 检查 Caddy 配置
+cat /etc/caddy/Caddyfile
+
+# 4. 查看 Caddy 日志
+journalctl -u caddy -n 50
+```
+
+#### 问题2：前端无法访问
+
+```bash
+# 1. 检查 Caddy 是否运行
+systemctl status caddy
+
+# 2. 检查前端文件是否存在
+ls -la /var/www/html/frontend
+
+# 3. 查看 Caddy 日志
+journalctl -u caddy -f
+```
+
+#### 问题3：防火墙问题
+
+```bash
+# 检查防火墙状态
+firewall-cmd --list-all
+
+# 开放 80 端口
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --reload
+
+# 或者使用 ufw (Ubuntu)
+ufw allow 80/tcp
+ufw reload
+```
+
+### 升级到 HTTPS（可选）
+
+如果有域名，可以启用自动 HTTPS：
+
+1. 将域名解析到服务器 IP
+2. 修改 `/etc/caddy/Caddyfile`，将 `:80` 改为域名
+3. 重启 Caddy，它会自动申请 SSL 证书
+
+```caddy
+your-domain.com {
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy 172.16.0.87:8080
+    }
+
+    handle {
+        root * /var/www/html/frontend
+        file_server
+        try_files {path} /index.html
+    }
+}
+```
 
 ---
 
