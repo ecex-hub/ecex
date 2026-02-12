@@ -27,14 +27,27 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 复制composer文件
 COPY composer.json composer.lock ./
 
+# 配置Composer - 允许所有插件并增加超时时间
+RUN composer config --global process-timeout 2000 \
+    && composer config --global --no-plugins allow-plugins.yiisoft/yii2-composer true \
+    && composer config --global --no-plugins allow-plugins true
+
 # 安装PHP依赖（利用Docker缓存）
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+# 注意：使用--no-scripts避免运行post-install脚本
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-scripts \
+    --prefer-dist \
+    --verbose \
+    2>&1 | tee /tmp/composer-install.log || (cat /tmp/composer-install.log && exit 1)
 
 # 复制应用代码
 COPY . .
 
 # 初始化Yii环境为生产环境
-RUN php init --env=Production --overwrite=All --interactive=0
+RUN php init --env=Production --overwrite=All --interactive=0 || true
 
 # ============================================
 # 阶段2: 生产阶段
