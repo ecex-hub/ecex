@@ -32,19 +32,34 @@ RUN composer config --global process-timeout 2000 \
     && composer config --global --no-plugins allow-plugins.yiisoft/yii2-composer true \
     && composer config --global --no-plugins allow-plugins true
 
-# 安装PHP依赖（先不使用 --no-dev 以便调试）
+# 清理Composer缓存
+RUN composer clear-cache
+
+# 安装PHP依赖（添加更详细的错误处理）
 RUN composer install \
     --optimize-autoloader \
     --no-interaction \
     --prefer-dist \
-    --verbose || { \
+    --no-dev \
+    --verbose 2>&1 | tee /tmp/composer-install.log || { \
+        echo "========================================"; \
         echo "Composer install failed!"; \
-        cat /root/.composer/cache.log 2>/dev/null || true; \
+        echo "========================================"; \
+        cat /tmp/composer-install.log; \
+        echo "========================================"; \
+        echo "Checking composer.json:"; \
+        cat composer.json; \
+        echo "========================================"; \
         exit 1; \
     }
 
 # 验证 vendor 目录已创建
-RUN ls -la /var/www/html/vendor/ && echo "✓ vendor directory created successfully"
+RUN if [ ! -d "/var/www/html/vendor" ]; then \
+        echo "ERROR: vendor directory not created!"; \
+        exit 1; \
+    fi && \
+    ls -la /var/www/html/vendor/ && \
+    echo "✓ vendor directory created successfully"
 
 # 初始化Yii环境为生产环境
 RUN php init --env=Production --overwrite=All --interactive=0 || true
