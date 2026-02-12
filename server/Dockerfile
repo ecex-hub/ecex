@@ -24,18 +24,22 @@ RUN apt-get update && apt-get install -y \
 # 安装Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 复制应用代码（先复制代码）
-COPY . .
+# 先复制 composer 文件以利用 Docker 缓存
+COPY composer.json composer.lock* ./
 
 # 配置Composer - 允许所有插件并增加超时时间
 RUN composer config --global process-timeout 2000 \
     && composer config --global --no-plugins allow-plugins.yiisoft/yii2-composer true \
-    && composer config --global --no-plugins allow-plugins true
+    && composer config --global --no-plugins allow-plugins true \
+    && composer config --global repos.packagist composer https://mirrors.aliyun.com/composer/
 
-# 清理Composer缓存
-RUN composer clear-cache
+# 如果没有 composer.lock，先生成一个
+RUN if [ ! -f "composer.lock" ]; then \
+        echo "No composer.lock found, running composer update..."; \
+        composer update --no-interaction --prefer-dist --verbose; \
+    fi
 
-# 安装PHP依赖（添加更详细的错误处理）
+# 安装PHP依赖
 RUN composer install \
     --optimize-autoloader \
     --no-interaction \
@@ -50,8 +54,17 @@ RUN composer install \
         echo "Checking composer.json:"; \
         cat composer.json; \
         echo "========================================"; \
+        echo "Checking PHP version:"; \
+        php -v; \
+        echo "========================================"; \
+        echo "Checking available memory:"; \
+        php -r "echo 'Memory Limit: ' . ini_get('memory_limit') . PHP_EOL;"; \
+        echo "========================================"; \
         exit 1; \
     }
+
+# 复制其余应用代码
+COPY . .
 
 # 验证 vendor 目录已创建
 RUN if [ ! -d "/var/www/html/vendor" ]; then \

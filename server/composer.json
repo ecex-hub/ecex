@@ -17,14 +17,15 @@
     "irc": "irc://irc.freenode.net/yii",
     "source": "https://github.com/yiisoft/yii2"
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "require": {
     "php": ">=7.2.0",
     "yiisoft/yii2": "~2.0.14",
     "yiisoft/yii2-bootstrap": "~2.0.0",
     "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
     "sizeg/yii2-jwt": "dev-master",
-    "yiisoft/yii2-redis": "2.0.x-dev",
+    "yiisoft/yii2-redis": "~2.0.0",
     "zircote/swagger-php": "^3.0",
     "doctrine/annotations": "^1.10",
     "yansongda/pay": "2.10.2",
@@ -49,6 +50,14 @@
     },
     "allow-plugins": {
       "yiisoft/yii2-composer": true
+    },
+    "preferred-install": "dist",
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
     }
   },
   "repositories": [
