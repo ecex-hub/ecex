@@ -1,9 +1,26 @@
 // 环境配置
 const env = import.meta.env
 
+// 动态获取API地址
+const getBaseURL = () => {
+  // 如果环境变量中有配置，使用环境变量
+  if (env.VITE_API_BASE_URL) {
+    return env.VITE_API_BASE_URL
+  }
+
+  // 否则使用当前域名的8080端口
+  if (typeof window !== 'undefined') {
+    const { protocol, hostname } = window.location
+    return `${protocol}//${hostname}:8080`
+  }
+
+  // 默认值（开发环境）
+  return 'http://localhost:8080'
+}
+
 export const config = {
   // API 基础地址
-  baseURL: env.VITE_API_BASE_URL || 'http://localhost:8080',
+  baseURL: getBaseURL(),
   
   // 请求超时时间
   timeout: 10000,
