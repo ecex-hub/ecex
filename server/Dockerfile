@@ -1,4 +1,5 @@
 # 后端 Dockerfile - 基于 PHP 7.4
+# 生产环境 Docker 镜像
 FROM php:7.4-fpm-alpine
 
 # 设置工作目录
@@ -58,7 +59,10 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 777 /var/www/html/backend/web/assets
 
 # 创建 Nginx 日志目录
-RUN mkdir -p /var/log/nginx /var/lib/nginx/logs \
+# 注意: /var/lib/nginx/logs 是符号链接,指向 /var/log/nginx,所以必须先创建 /var/log/nginx
+RUN rm -rf /var/lib/nginx/logs \
+    && mkdir -p /var/log/nginx \
+    && ln -sf /var/log/nginx /var/lib/nginx/logs \
     && chown -R nginx:nginx /var/log/nginx /var/lib/nginx
 
 # 复制 Nginx 配置
