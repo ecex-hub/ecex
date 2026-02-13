@@ -1,38 +1,49 @@
 # Git
 .git
 .gitignore
-
-# Docker
-.docker
-Dockerfile
-docker-compose.yml
-.dockerignore
+.gitattributes
 
 # IDE
 .idea
 .vscode
 *.swp
 *.swo
+*~
 
-# Runtime
+# 依赖
+vendor/
+node_modules/
+
+# 运行时文件
 backend/runtime/*
-!backend/runtime/.gitkeep
+!backend/runtime/.gitignore
 backend/web/assets/*
-!backend/web/assets/.gitkeep
+!backend/web/assets/.gitignore
 
-# Environment
+# 日志
+*.log
+logs/
+
+# 环境配置
 .env
 .env.local
 .env.*.local
 
-# Logs
-*.log
+# Docker
+docker-compose.override.yml
+Dockerfile
+.dockerignore
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Tests
-tests
+# 测试
+tests/
 codeception.yml
+
+# 文档
+README.md
+docs/
+
+# 临时文件
+*.tmp
+*.bak
+*.cache
 

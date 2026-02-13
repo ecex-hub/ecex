@@ -8,15 +8,15 @@
     <!-- 助华专区卡片列表 -->
     <div class="zone-cards">
       <div class="zone-card" @click="handleEnterProduct">
-        <img src="@/assets/images/zone-card-01.png" alt="助华专区01" class="card-image" />
+        <img src="@/assets/images/助华专区01.png" alt="助华专区01" class="card-image" />
         <button class="enter-button">点击进入></button>
       </div>
       <div class="zone-card" @click="handleEnterProduct">
-        <img src="@/assets/images/zone-card-02.png" alt="助华专区02" class="card-image" />
+        <img src="@/assets/images/助华专区02.png" alt="助华专区02" class="card-image" />
         <button class="enter-button">点击进入></button>
       </div>
       <div class="zone-card" @click="handleEnterProduct">
-        <img src="@/assets/images/zone-card-03.png" alt="助华专区03" class="card-image" />
+        <img src="@/assets/images/助华专区03.png" alt="助华专区03" class="card-image" />
         <button class="enter-button">点击进入></button>
       </div>
     </div>

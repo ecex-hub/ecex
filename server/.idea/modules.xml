@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/stock_admin/.idea/stock_admin.iml" filepath="$PROJECT_DIR$/stock_admin/.idea/stock_admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/stock_yii_c.iml" filepath="$PROJECT_DIR$/.idea/stock_yii_c.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../援疆 (2)/.idea/援疆 (2).iml" filepath="$PROJECT_DIR$/../援疆 (2)/.idea/援疆 (2).iml" />
+    </modules>
+  </component>
+</project>

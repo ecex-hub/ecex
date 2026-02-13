@@ -1,0 +1,100 @@
+# Caddyfile - 前端服务配置
+{
+    # 全局选项
+    admin off
+    # 自动 HTTPS（需要配置域名）
+    # email your-email@example.com
+}
+
+# 主站点配置
+# 将 your-domain.com 替换为你的实际域名
+:80 {
+    # 根目录
+    root * /usr/share/caddy
+    
+    # 启用文件服务
+    file_server
+    
+    # 启用 gzip 压缩
+    encode gzip
+    
+    # SPA 路由支持（Vue Router history 模式）
+    try_files {path} /index.html
+    
+    # API 反向代理到后端内网地址
+    # 将 BACKEND_INTERNAL_IP 替换为后端服务器的内网 IP
+    handle /api/* {
+        reverse_proxy http://BACKEND_INTERNAL_IP:8080 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    
+    # 安全头
+    header {
+        # 启用 HSTS
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        # XSS 保护
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        # CSP
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;"
+        # 移除服务器信息
+        -Server
+    }
+    
+    # 静态资源缓存
+    @static {
+        path *.ico *.css *.js *.gif *.jpg *.jpeg *.png *.svg *.woff *.woff2 *.ttf *.eot
+    }
+    header @static Cache-Control "public, max-age=31536000, immutable"
+    
+    # 日志
+    log {
+        output file /var/log/caddy/access.log
+        format json
+    }
+}
+
+# HTTPS 配置（取消注释并配置域名后使用）
+# your-domain.com {
+#     root * /usr/share/caddy
+#     file_server
+#     encode gzip
+#     try_files {path} /index.html
+#     
+#     handle /api/* {
+#         reverse_proxy http://BACKEND_INTERNAL_IP:8080 {
+#             header_up Host {host}
+#             header_up X-Real-IP {remote_host}
+#             header_up X-Forwarded-For {remote_host}
+#             header_up X-Forwarded-Proto {scheme}
+#         }
+#     }
+#     
+#     header {
+#         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+#         X-Content-Type-Options "nosniff"
+#         X-Frame-Options "SAMEORIGIN"
+#         X-XSS-Protection "1; mode=block"
+#         Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;"
+#         -Server
+#     }
+#     
+#     @static {
+#         path *.ico *.css *.js *.gif *.jpg *.jpeg *.png *.svg *.woff *.woff2 *.ttf *.eot
+#     }
+#     header @static Cache-Control "public, max-age=31536000, immutable"
+#     
+#     log {
+#         output file /var/log/caddy/access.log
+#         format json
+#     }
+#     
+#     # 自动 HTTPS
+#     tls your-email@example.com
+# }
+

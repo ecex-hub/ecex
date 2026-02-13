@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PHP + Nginx 应用（从 GitHub 拉取镜像）
+  app:
+    image: ghcr.io/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/backend:latest
+    container_name: yii2-app
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./runtime:/var/www/html/backend/runtime
+      - ./assets:/var/www/html/backend/web/assets
+      - ./uploads:/var/www/html/backend/web/uploads
+      - ./logs:/var/log
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - YII_DEBUG=false
+      - YII_ENV=prod
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - backend-network
+
+  # MySQL 5.7
+  mysql:
+    image: mysql:5.7
+    container_name: yii2-mysql
+    restart: always
+    ports:
+      - "127.0.0.1:3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-conf:/etc/mysql/conf.d
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=1000
+      - --innodb_buffer_pool_size=512M
+      - --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    networks:
+      - backend-network
+
+  # Redis
+  redis:
+    image: redis:6-alpine
+    container_name: yii2-redis
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
+

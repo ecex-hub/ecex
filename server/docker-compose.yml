@@ -1,66 +1,77 @@
 version: '3.8'
 
 services:
-  backend:
+  # PHP + Nginx 应用
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ecex-backend
-    restart: unless-stopped
+    container_name: yii2-app
+    restart: always
     ports:
       - "8080:80"
-      - "8443:443"
-    environment:
-      - DB_HOST=${DB_HOST:-mysql}
-      - DB_PORT=${DB_PORT:-3306}
-      - DB_NAME=${DB_NAME:-stock}
-      - DB_USER=${DB_USER:-root}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - REDIS_DATABASE=${REDIS_DATABASE:-0}
     volumes:
       - ./backend/runtime:/var/www/html/backend/runtime
       - ./backend/web/assets:/var/www/html/backend/web/assets
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - ecex-network
+      - ./logs:/var/log
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME:-ecex}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
     depends_on:
       - mysql
       - redis
+    networks:
+      - backend-network
 
+  # MySQL 5.7
   mysql:
-    image: mysql:8.0
-    container_name: ecex-mysql
-    restart: unless-stopped
+    image: mysql:5.7
+    container_name: yii2-mysql
+    restart: always
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME:-stock}
-      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
-      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+      - MYSQL_DATABASE=${DB_NAME:-ecex}
+      - TZ=Asia/Shanghai
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./db.sql:/docker-entrypoint-initdb.d/init.sql
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=1000
+      - --innodb_buffer_pool_size=512M
     networks:
-      - ecex-network
-    command: --default-authentication-plugin=mysql_native_password
+      - backend-network
 
+  # Redis
   redis:
-    image: redis:7-alpine
-    container_name: ecex-redis
-    restart: unless-stopped
+    image: redis:6-alpine
+    container_name: yii2-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
     volumes:
       - redis-data:/data
     networks:
-      - ecex-network
-
-networks:
-  ecex-network:
-    driver: bridge
+      - backend-network
 
 volumes:
   mysql-data:
+    driver: local
   redis-data:
-  caddy_data:
-  caddy_config:
+    driver: local
+
+networks:
+  backend-network:
+    driver: bridge
 
