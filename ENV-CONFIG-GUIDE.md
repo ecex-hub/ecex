@@ -90,26 +90,42 @@ FRONTEND_URL=https://www.ecex.com
 以下密码已经预设为强密码,你可以直接使用,也可以修改为自己的密码:
 
 ### MySQL 数据库密码
+
+**在 `deploy/backend/.env` 中** (用于 docker-compose):
 ```bash
+# 注意: $ 符号需要使用 $$ 转义
+DB_PASSWORD=EcEx@MySQL#2026!Prod$$Secure
+```
+
+**在 `server/.env.production` 中** (用于应用代码):
+```bash
+# 不需要转义
 DB_PASSWORD=EcEx@MySQL#2026!Prod$Secure
 ```
 
-**位置**:
-- `deploy/backend/.env` (第13行)
-- `server/.env.production` (第13行)
-
-⚠️ **重要**: 这两个文件中的密码必须一致!
+⚠️ **重要**:
+- `deploy/backend/.env` 中的 `$` 必须写成 `$$` (docker-compose 要求)
+- `server/.env.production` 中的 `$` 保持原样 (应用代码使用)
+- 实际密码是 `EcEx@MySQL#2026!Prod$Secure` (只有一个 `$`)
 
 ### Redis 密码
+
+**在 `deploy/backend/.env` 中** (用于 docker-compose):
 ```bash
+# 注意: $ 符号需要使用 $$ 转义
+REDIS_PASSWORD=EcEx@Redis#2026!Cache$$Strong
+```
+
+**在 `server/.env.production` 中** (用于应用代码):
+```bash
+# 不需要转义
 REDIS_PASSWORD=EcEx@Redis#2026!Cache$Strong
 ```
 
-**位置**:
-- `deploy/backend/.env` (第17行)
-- `server/.env.production` (第19行)
-
-⚠️ **重要**: 这两个文件中的密码必须一致!
+⚠️ **重要**:
+- `deploy/backend/.env` 中的 `$` 必须写成 `$$` (docker-compose 要求)
+- `server/.env.production` 中的 `$` 保持原样 (应用代码使用)
+- 实际密码是 `EcEx@Redis#2026!Cache$Strong` (只有一个 `$`)
 
 ### JWT 密钥
 ```bash
