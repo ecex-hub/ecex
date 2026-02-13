@@ -57,6 +57,10 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 777 /var/www/html/backend/runtime \
     && chmod -R 777 /var/www/html/backend/web/assets
 
+# 创建 Nginx 日志目录
+RUN mkdir -p /var/log/nginx /var/lib/nginx/logs \
+    && chown -R nginx:nginx /var/log/nginx /var/lib/nginx
+
 # 复制 Nginx 配置
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf

@@ -105,7 +105,7 @@ cd ~/app/backend
 
 # 2. 下载部署文件
 # 方法 A: 使用 git clone
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git temp
+git clone https://github.com/ecex-hub/ecex.git temp
 cp -r temp/deploy/backend/* .
 rm -rf temp
 
@@ -131,10 +131,10 @@ mkdir -p runtime assets uploads logs mysql-data redis-data mysql-conf
 
 # 6. 导入数据库
 # 从仓库获取 db.sql 文件
-wget https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/db.sql
+wget https://raw.githubusercontent.com/ecex-hub/ecex/main/db.sql
 
 # 7. 登录 GitHub Container Registry
-echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_USERNAME} --password-stdin
 
 # 8. 启动服务
 chmod +x deploy.sh
@@ -143,7 +143,7 @@ bash deploy.sh
 # 9. 导入数据库（首次部署）
 # 等待 MySQL 启动完成
 sleep 30
-docker exec -i yii2-mysql mysql -uroot -p${DB_PASSWORD} ecex < db.sql
+docker exec -i yii2-mysql mysql -uroot -p"${DB_PASSWORD}" ecex < db.sql
 
 # 10. 验证服务
 curl http://localhost:8080
