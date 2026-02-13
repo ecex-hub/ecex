@@ -96,16 +96,9 @@ class SendSMSLog extends BaseModel
         if ($this->validate()) {
             $boor = $this->insert($data);
             if ($boor) {
-                //准备发送短信
-                $model = new SendSMS();
-                //$boor = $model->SMSSend($phone, $smsCode);
-                $boor = true;
-                if (!empty($boor)) {
-                    return true;
-                } else {
-                    $this->addError('mesg', ['212', '验证码发送失败']);
-                    return false;
-                }
+                // 短信功能已禁用，直接返回成功
+                // 实际生产环境中，验证码会记录在数据库中供验证使用
+                return true;
             }
         }
         $this->addError('mesg', ['211', '验证码生成失败']);
