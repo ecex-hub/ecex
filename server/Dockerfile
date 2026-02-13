@@ -52,6 +52,9 @@ RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/compos
 # 安装依赖（生产环境优化）
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
+# 初始化 Yii2 环境（生产环境）
+RUN php init --env=Production --overwrite=All
+
 # 设置权限
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
