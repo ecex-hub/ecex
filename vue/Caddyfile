@@ -15,7 +15,7 @@ ecex.cc:80 {
 # HTTPS 配置
 ecex.cc {
     # API 反向代理到后端（必须放在最前面，优先匹配）
-    handle /api/* {
+    handle_path /api/* {
         reverse_proxy http://172.16.0.87:8080 {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
