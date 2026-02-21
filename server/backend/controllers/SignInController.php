@@ -202,7 +202,6 @@ class SignInController extends \backend\lib\ApiBaseController
     {
         $user = Yii::$app->user->identity;
         $uid = $user->uid;
-
         $userSignIn = new UserSignIn();
 
         // 累计签到天数

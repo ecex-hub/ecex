@@ -164,7 +164,8 @@ class AccountInfo extends BaseModel implements IdentityInterface
         
         do {
             // 生成6位随机字符串（包含数字和大写字母）
-            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            //$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $characters = '0123456789';
             $inviteCode = '';
             for ($i = 0; $i < 6; $i++) {
                 $inviteCode .= $characters[rand(0, strlen($characters) - 1)];

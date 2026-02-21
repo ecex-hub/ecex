@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\AccountInfo;
 use common\models\Product;
+use common\models\PointsGoods;
 
 /**
  * 积分商城相关接口控制器
@@ -103,16 +104,9 @@ class MallController extends \backend\lib\ApiBaseController
         $page = $params['page'] ?? 1;
         $size = $params['size'] ?? 10;
         
-        // 使用Product模型获取商品列表，这里需要根据实际业务调整
-        // 如果积分商城使用的是不同的商品表，需要创建对应的模型
-        $model = new Product();
+        // 从 t_points_goods 表获取积分商品列表
+        $model = new PointsGoods();
         $list = $model->getList($page, $size);
-        
-        // 转换数据格式，添加积分相关字段
-        foreach ($list as &$item) {
-            $item['points'] = intval($item['price'] ?? 0); // 根据实际业务调整积分计算方式
-            $item['image'] = \common\components\FuncHelper::getCdnUrl($item['image'] ?? '');
-        }
         
         $this->output(['list' => $list]);
     }
@@ -176,16 +170,21 @@ class MallController extends \backend\lib\ApiBaseController
         $quantity = $params['quantity'] ?? 1;
         $user = Yii::$app->user->identity;
         
-        // 获取商品信息
-        $productModel = new Product();
-        $product = $productModel->getInfo($params['productId']);
+        // 获取积分商品信息
+        $goodsModel = new PointsGoods();
+        $goods = $goodsModel->getInfo($params['productId']);
         
-        if (empty($product)) {
+        if (empty($goods)) {
             $this->output_error('商品不存在', 404);
         }
         
+        // 检查库存
+        if ($goods['stock'] < $quantity) {
+            $this->output_error('库存不足', 400);
+        }
+        
         // 计算所需积分
-        $requiredPoints = intval($product['price'] ?? 0) * $quantity;
+        $requiredPoints = intval($goods['points'] ?? 0) * $quantity;
         $userPoints = intval($user->dream_fund ?? 0);
         
         if ($userPoints < $requiredPoints) {
