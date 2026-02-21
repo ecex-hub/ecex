@@ -1,0 +1,29 @@
+# Runtime & Debug
+server/backend/runtime/
+server/frontend/runtime/
+server/console/runtime/
+server/admin/runtime/
+
+# Environment files with real credentials
+deploy/backend/.env
+deploy/frontend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker persistent data
+mysql-data/
+caddy-data/
+caddy-config/
+
+# Logs
+*.log
+logs/
+

@@ -9,7 +9,7 @@
 }
 
 # 替换为你的实际域名
-your-domain.com {
+ecex.cc {
     # 根目录
     root * /usr/share/caddy
     
@@ -73,7 +73,7 @@ your-domain.com {
 }
 
 # HTTP 自动重定向到 HTTPS
-http://your-domain.com {
-    redir https://your-domain.com{uri} permanent
+http://ecex.cc {
+    redir https://ecex.cc{uri} permanent
 }
 
