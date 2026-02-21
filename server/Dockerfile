@@ -59,14 +59,19 @@ RUN php init --env=Production --overwrite=All
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 777 /var/www/html/backend/runtime \
-    && chmod -R 777 /var/www/html/backend/web/assets
+    && chmod -R 777 /var/www/html/backend/web/assets \
+    && mkdir -p /var/www/html/backend/web/uploads \
+    && chown -R www-data:www-data /var/www/html/backend/web/uploads \
+    && chmod -R 777 /var/www/html/backend/web/uploads
 
-# 创建 Nginx 日志目录
-# 注意: /var/lib/nginx/logs 是符号链接,指向 /var/log/nginx,所以必须先创建 /var/log/nginx
+# 创建 Nginx 日志目录和临时目录（worker 以 www-data 运行，需要访问权限）
 RUN rm -rf /var/lib/nginx/logs \
     && mkdir -p /var/log/nginx \
+    && mkdir -p /var/lib/nginx/tmp/client_body \
     && ln -sf /var/log/nginx /var/lib/nginx/logs \
-    && chown -R nginx:nginx /var/log/nginx /var/lib/nginx
+    && chmod 755 /var/lib/nginx \
+    && chown -R www-data:www-data /var/lib/nginx/tmp \
+    && chown -R nginx:nginx /var/log/nginx
 
 # 复制 Nginx 配置
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
