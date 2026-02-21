@@ -20,7 +20,8 @@
 
 ### 1. 域名准备
 - 准备一个已备案的域名
-- 将域名 A 记录解析到前端服务器公网 IP
+- 将域名 A 记录解析到前端服务器公网 IP（例如 `ecex.cc`）
+- 将管理后台子域名 A 记录也解析到前端服务器公网 IP（例如 `admin.ecex.cc`）
 - 确保 80 和 443 端口可访问
 
 ### 2. GitHub 准备
@@ -33,7 +34,8 @@
 - 记录后端服务器的内网 IP 地址
 - 配置安全组规则：
   - 前端服务器：开放 80、443 端口
-  - 后端服务器：开放 8080 端口（仅内网）
+  - 后端服务器：开放 8080 端口（仅内网，Yii2 API）
+  - 后端服务器：开放 8097 端口（仅内网，管理后台）
 
 ## 🚀 部署步骤
 
@@ -128,6 +130,7 @@ vi docker-compose.prod.yml
 
 # 5. 创建必要的目录
 mkdir -p runtime assets uploads logs mysql-data redis-data mysql-conf
+mkdir -p admin-runtime admin-uploads admin-logs
 
 # 6. 导入数据库
 # 从仓库获取 db.sql 文件
@@ -168,6 +171,25 @@ vi /var/www/html/common/config/main-local.php
 ip addr show eth0 | grep "inet " | awk '{print $2}' | cut -d/ -f1
 ```
 
+3. **启动管理后台容器**（admin 镜像构建完成后）：
+```bash
+cd ~/app/backend
+
+# 拉取管理后台镜像
+docker pull ghcr.io/ecex-hub/ecex/admin:latest
+
+# 启动管理后台容器
+docker-compose -f docker-compose.prod.yml up -d admin
+
+# 验证管理后台服务
+curl http://localhost:8097
+docker logs fastadmin-app
+```
+
+> **说明**：admin 服务与 Yii2 后端共享同一个 MySQL 和 Redis 容器。管理后台使用 ThinkPHP 框架，
+> 数据库表前缀为 `t_`，通过 `PHP_` 前缀的环境变量传递配置（如 `PHP_DATABASE_HOSTNAME=mysql`）。
+> docker-compose.prod.yml 中已包含 admin 服务的完整配置，无需额外修改。
+
 ### 第四步：部署前端服务器
 
 在**前端服务器**上执行：
@@ -194,9 +216,11 @@ vi .env
 cp Caddyfile.example Caddyfile
 vi Caddyfile
 # 修改以下内容：
-# 1. 将 your-domain.com 替换为你的实际域名
+# 1. 将 your-domain.com 替换为你的实际域名（如 ecex.cc）
 # 2. 将 your-email@example.com 替换为你的邮箱
 # 3. 将 172.16.0.100:8080 替换为后端服务器的实际内网地址
+# 4. 将 admin.ecex.cc 中的 172.16.0.100:8097 替换为后端实际内网地址
+# 注意：Caddyfile 中已包含 admin.ecex.cc 子域名配置，会自动申请 HTTPS 证书
 
 # 5. 修改 docker-compose.prod.yml
 vi docker-compose.prod.yml
@@ -236,11 +260,23 @@ curl -X POST https://your-domain.com/api/login/index \
   -d '{"account":"test","password":"123456"}'
 ```
 
-3. **查看日志**：
+3. **测试管理后台**：
+```bash
+# 在浏览器访问管理后台
+https://admin.ecex.cc
+
+# 或通过后端服务器内网直接测试
+curl http://localhost:8097
+```
+
+4. **查看日志**：
 ```bash
 # 后端日志
 cd ~/app/backend
 docker-compose -f docker-compose.prod.yml logs -f app
+
+# 管理后台日志
+docker-compose -f docker-compose.prod.yml logs -f admin
 
 # 前端日志
 cd ~/app/frontend
@@ -254,6 +290,14 @@ docker-compose -f docker-compose.prod.yml logs -f frontend
 ```bash
 cd ~/app/backend
 bash deploy.sh
+```
+
+### 更新管理后台
+
+```bash
+cd ~/app/backend
+docker pull ghcr.io/ecex-hub/ecex/admin:latest
+docker-compose -f docker-compose.prod.yml up -d admin
 ```
 
 ### 更新前端
@@ -290,6 +334,17 @@ docker exec -i yii2-mysql mysql -uroot -p${DB_PASSWORD} ecex < backup.sql
 
 # 清理日志
 docker-compose -f docker-compose.prod.yml exec app sh -c "rm -rf /var/www/html/backend/runtime/logs/*"
+
+# === 管理后台（FastAdmin）===
+
+# 查看管理后台日志
+docker-compose -f docker-compose.prod.yml logs -f admin
+
+# 重启管理后台
+docker-compose -f docker-compose.prod.yml restart admin
+
+# 进入管理后台容器
+docker exec -it fastadmin-app sh
 ```
 
 ### 前端服务器
@@ -422,6 +477,29 @@ docker-compose -f docker-compose.prod.yml logs mysql
 # 进入容器测试连接
 docker exec -it yii2-app sh
 php -r "new PDO('mysql:host=mysql;dbname=ecex', 'root', 'password');"
+```
+
+### 5. 管理后台访问异常
+
+**问题**: `admin.ecex.cc` 无法访问或显示 502
+
+**解决**:
+```bash
+# 1. 检查 admin 容器是否运行
+cd ~/app/backend
+docker ps | grep fastadmin
+
+# 2. 检查 admin 容器日志
+docker-compose -f docker-compose.prod.yml logs admin
+
+# 3. 确认后端内网 8097 端口可访问
+curl http://localhost:8097
+
+# 4. 检查 DNS 解析是否生效
+nslookup admin.ecex.cc
+
+# 5. 检查前端 Caddyfile 是否包含 admin.ecex.cc 配置
+cat ~/app/frontend/Caddyfile | grep -A 5 "admin.ecex.cc"
 ```
 
 ## 📞 技术支持
