@@ -55,9 +55,10 @@ RUN chmod -R 755 /var/www/html \
     && chown -R www-data:www-data /var/www/html/public/uploads \
     && chmod -R 777 /var/www/html/public/uploads
 
-# 创建 Nginx 日志目录
+# 创建 Nginx 日志目录和临时目录
 RUN rm -rf /var/lib/nginx/logs \
     && mkdir -p /var/log/nginx \
+    && mkdir -p /var/lib/nginx/tmp/client_body \
     && ln -sf /var/log/nginx /var/lib/nginx/logs \
     && chown -R nginx:nginx /var/log/nginx /var/lib/nginx
 
