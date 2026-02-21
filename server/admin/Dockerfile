@@ -42,21 +42,24 @@ COPY . /var/www/html
 # 删除容器内的 .env 文件（使用环境变量替代）
 RUN rm -f /var/www/html/.env
 
-# 设置权限
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 777 /var/www/html/runtime
+# 创建必要的目录（runtime 和 uploads 被 .gitignore 排除，需要手动创建）
+RUN mkdir -p /var/www/html/runtime/cache \
+    && mkdir -p /var/www/html/runtime/log \
+    && mkdir -p /var/www/html/runtime/temp \
+    && mkdir -p /var/www/html/public/uploads
+
+# 设置权限（只对需要写入的目录设置 www-data 所有权）
+RUN chmod -R 755 /var/www/html \
+    && chown -R www-data:www-data /var/www/html/runtime \
+    && chmod -R 777 /var/www/html/runtime \
+    && chown -R www-data:www-data /var/www/html/public/uploads \
+    && chmod -R 777 /var/www/html/public/uploads
 
 # 创建 Nginx 日志目录
 RUN rm -rf /var/lib/nginx/logs \
     && mkdir -p /var/log/nginx \
     && ln -sf /var/log/nginx /var/lib/nginx/logs \
     && chown -R nginx:nginx /var/log/nginx /var/lib/nginx
-
-# 创建上传目录
-RUN mkdir -p /var/www/html/public/uploads \
-    && chown -R www-data:www-data /var/www/html/public/uploads \
-    && chmod -R 777 /var/www/html/public/uploads
 
 # 复制 Nginx 配置
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
