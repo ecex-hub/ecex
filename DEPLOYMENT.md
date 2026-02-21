@@ -146,7 +146,7 @@ bash deploy.sh
 # 9. 导入数据库（首次部署）
 # 等待 MySQL 启动完成
 sleep 30
-docker exec -i yii2-mysql mysql -uroot -p"${DB_PASSWORD}" ecex < db.sql
+docker exec -i yii2-mysql mysql -uroot -p"${EcEx@MySQL#2026!Prod$$Secure}" ecex < db.sql
 
 # 10. 验证服务
 curl http://localhost:8080
@@ -309,42 +309,216 @@ bash deploy.sh
 
 ## 🛠️ 常用运维命令
 
-### 后端服务器
+### 服务状态管理
 
 ```bash
 cd ~/app/backend
 
-# 查看服务状态
+# 查看所有服务状态
 docker-compose -f docker-compose.prod.yml ps
 
-# 查看日志
-docker-compose -f docker-compose.prod.yml logs -f app
+# 查看所有容器资源占用
+docker stats --no-stream
 
-# 重启服务
-docker-compose -f docker-compose.prod.yml restart app
+# 重启所有后端服务
+docker-compose -f docker-compose.prod.yml restart
+
+# 重启单个服务
+docker-compose -f docker-compose.prod.yml restart app      # Yii2 API
+docker-compose -f docker-compose.prod.yml restart admin    # 管理后台
+docker-compose -f docker-compose.prod.yml restart mysql    # MySQL
+docker-compose -f docker-compose.prod.yml restart redis    # Redis
+
+# 停止/启动所有服务
+docker-compose -f docker-compose.prod.yml stop
+docker-compose -f docker-compose.prod.yml up -d
 
 # 进入容器
-docker exec -it yii2-app sh
+docker exec -it yii2-app sh          # Yii2 API 容器
+docker exec -it fastadmin-app sh     # 管理后台容器
+docker exec -it yii2-mysql bash      # MySQL 容器
+docker exec -it yii2-redis sh        # Redis 容器
+```
 
+### 📋 日志检查命令
+
+#### Yii2 API 后端日志
+
+```bash
+# Docker 容器日志（stdout/stderr）
+docker-compose -f docker-compose.prod.yml logs -f app
+docker-compose -f docker-compose.prod.yml logs --tail 50 app
+
+# Yii2 应用错误日志（记录在数据库 t_system_log 表中）
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "SELECT * FROM t_system_log ORDER BY id DESC LIMIT 20;"
+
+# Yii2 请求日志
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "SELECT * FROM t_request_log ORDER BY id DESC LIMIT 20;"
+
+# Nginx 访问日志
+docker exec yii2-app tail -50 /var/log/nginx/access.log
+
+# Nginx 错误日志
+docker exec yii2-app tail -50 /var/log/nginx/error.log
+
+# PHP 错误日志
+docker exec yii2-app tail -50 /var/log/php_errors.log
+
+# PHP-FPM 慢日志
+docker exec yii2-app tail -50 /var/log/php-fpm-slow.log
+```
+
+#### 管理后台（FastAdmin）日志
+
+```bash
+# Docker 容器日志
+docker-compose -f docker-compose.prod.yml logs -f admin
+docker-compose -f docker-compose.prod.yml logs --tail 50 admin
+
+# ThinkPHP 应用日志（按日期分目录，记录 error 和 sql）
+# 查看日志目录结构
+docker exec fastadmin-app ls -la /var/www/html/runtime/log/
+
+# 查看最新日志文件
+docker exec fastadmin-app find /var/www/html/runtime/log/ -name "*.log" -exec tail -30 {} \;
+
+# 查看今天的错误日志
+docker exec fastadmin-app cat /var/www/html/runtime/log/$(date +%Y%m)/$(date +%d).log 2>/dev/null
+
+# 查看今天的 SQL 日志
+docker exec fastadmin-app cat /var/www/html/runtime/log/$(date +%Y%m)/$(date +%d)_sql.log 2>/dev/null
+
+# PHP 错误日志
+docker exec fastadmin-app tail -50 /var/log/php_errors.log
+
+# Nginx 访问日志
+docker exec fastadmin-app tail -50 /var/log/nginx/admin-access.log
+
+# Nginx 错误日志
+docker exec fastadmin-app tail -50 /var/log/nginx/admin-error.log
+
+# 宿主机上查看日志（通过 volume 映射）
+ls -la ~/app/backend/admin-runtime/log/
+tail -50 ~/app/backend/admin-logs/php_errors.log
+tail -50 ~/app/backend/admin-logs/nginx/admin-error.log
+```
+
+#### MySQL 日志
+
+```bash
+# MySQL 容器日志
+docker-compose -f docker-compose.prod.yml logs --tail 50 mysql
+
+# MySQL 错误日志
+docker exec yii2-mysql tail -50 /var/log/mysql/error.log 2>/dev/null
+
+# 查看慢查询（如果开启）
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "SHOW VARIABLES LIKE 'slow_query%';"
+```
+
+#### Redis 日志
+
+```bash
+# Redis 容器日志
+docker-compose -f docker-compose.prod.yml logs --tail 50 redis
+
+# Redis 运行信息
+docker exec yii2-redis redis-cli -a '你的Redis密码' INFO server
+docker exec yii2-redis redis-cli -a '你的Redis密码' INFO memory
+```
+
+#### 前端服务器日志
+
+```bash
+cd ~/app/frontend
+
+# Caddy 容器日志
+docker-compose -f docker-compose.prod.yml logs -f frontend
+docker-compose -f docker-compose.prod.yml logs --tail 50 frontend
+
+# Caddy 访问日志
+docker exec ecex-frontend cat /var/log/caddy/access.log | tail -50
+docker exec ecex-frontend cat /var/log/caddy/admin-access.log | tail -50
+```
+
+### 🗄️ 数据库运维
+
+```bash
 # 备份数据库
-docker exec yii2-mysql mysqldump -uroot -p${DB_PASSWORD} ecex > backup_$(date +%Y%m%d).sql
+docker exec yii2-mysql mysqldump -uroot -p'你的数据库密码' ecex > backup_$(date +%Y%m%d).sql
+
+# 备份数据库（压缩）
+docker exec yii2-mysql mysqldump -uroot -p'你的数据库密码' ecex | gzip > backup_$(date +%Y%m%d).sql.gz
 
 # 恢复数据库
-docker exec -i yii2-mysql mysql -uroot -p${DB_PASSWORD} ecex < backup.sql
+docker exec -i yii2-mysql mysql -uroot -p'你的数据库密码' ecex < backup.sql
 
-# 清理日志
-docker-compose -f docker-compose.prod.yml exec app sh -c "rm -rf /var/www/html/backend/runtime/logs/*"
+# 查看所有表
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "SHOW TABLES;"
 
-# === 管理后台（FastAdmin）===
+# 查看表结构
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "DESC 表名;"
 
-# 查看管理后台日志
-docker-compose -f docker-compose.prod.yml logs -f admin
+# 查看数据库大小
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "
+  SELECT table_schema AS '数据库',
+    ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS '大小(MB)'
+  FROM information_schema.tables
+  WHERE table_schema = 'ecex'
+  GROUP BY table_schema;"
 
-# 重启管理后台
-docker-compose -f docker-compose.prod.yml restart admin
+# 清除错误日志表
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "DELETE FROM t_system_log;"
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "DELETE FROM t_request_log;"
 
-# 进入管理后台容器
-docker exec -it fastadmin-app sh
+# 查看 MySQL 连接数
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "SHOW STATUS LIKE 'Threads_connected';"
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "SHOW PROCESSLIST;"
+```
+
+### 🧹 日志清理
+
+```bash
+# 清理 ThinkPHP 应用日志
+docker exec fastadmin-app rm -rf /var/www/html/runtime/log/*
+
+# 清理 ThinkPHP 缓存
+docker exec fastadmin-app rm -rf /var/www/html/runtime/cache/*
+docker exec fastadmin-app rm -rf /var/www/html/runtime/temp/*
+
+# 清理 Yii2 应用日志
+docker exec yii2-app sh -c "rm -rf /var/www/html/backend/runtime/logs/*"
+
+# 清理 Nginx 日志
+docker exec fastadmin-app sh -c "echo '' > /var/log/nginx/admin-access.log"
+docker exec fastadmin-app sh -c "echo '' > /var/log/nginx/admin-error.log"
+docker exec yii2-app sh -c "echo '' > /var/log/nginx/access.log"
+docker exec yii2-app sh -c "echo '' > /var/log/nginx/error.log"
+
+# 清理 PHP 错误日志
+docker exec fastadmin-app sh -c "echo '' > /var/log/php_errors.log"
+docker exec yii2-app sh -c "echo '' > /var/log/php_errors.log"
+
+# 清理 Docker 日志（宿主机执行）
+sudo truncate -s 0 $(docker inspect --format='{{.LogPath}}' fastadmin-app)
+sudo truncate -s 0 $(docker inspect --format='{{.LogPath}}' yii2-app)
+```
+
+### 🔄 镜像更新部署
+
+```bash
+cd ~/app/backend
+
+# 更新 Yii2 API
+docker pull ghcr.io/ecex-hub/ecex/backend:latest
+docker-compose -f docker-compose.prod.yml up -d app
+
+# 更新管理后台
+docker pull ghcr.io/ecex-hub/ecex/admin:latest
+docker-compose -f docker-compose.prod.yml up -d admin
+
+# 清理旧镜像
+docker image prune -f
 ```
 
 ### 前端服务器
@@ -366,6 +540,39 @@ docker-compose -f docker-compose.prod.yml exec frontend caddy reload --config /e
 
 # 查看证书状态
 docker-compose -f docker-compose.prod.yml exec frontend caddy list-certificates
+
+# 更新前端镜像
+docker pull ghcr.io/ecex-hub/ecex/frontend:latest
+docker-compose -f docker-compose.prod.yml up -d frontend
+```
+
+### 🔍 故障排查快速命令
+
+```bash
+# 一键检查所有服务健康状态
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# 检查端口监听
+ss -tlnp | grep -E '8080|8097|3306|6379'
+
+# 检查磁盘空间
+df -h
+docker system df
+
+# 检查内存使用
+free -h
+
+# 测试 Yii2 API 是否正常
+curl -I http://localhost:8080
+
+# 测试管理后台是否正常
+curl -I http://localhost:8097/stock.php
+
+# 测试 MySQL 连接
+docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "SELECT 1;"
+
+# 测试 Redis 连接
+docker exec yii2-redis redis-cli -a '你的Redis密码' PING
 ```
 
 ## 🔒 安全加固建议
