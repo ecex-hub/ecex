@@ -1,0 +1,385 @@
+<style type="text/css">
+    .sm-st {
+        background: #fff;
+        padding: 20px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        margin-bottom: 20px;
+    }
+
+    .sm-st-icon {
+        width: 60px;
+        height: 60px;
+        display: inline-block;
+        line-height: 60px;
+        text-align: center;
+        font-size: 30px;
+        background: #eee;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        float: left;
+        margin-right: 10px;
+        color: #fff;
+    }
+
+    .sm-st-info {
+        padding-top: 2px;
+    }
+
+    .sm-st-info span {
+        display: block;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .orange {
+        background: #fa8564 !important;
+    }
+
+    .tar {
+        background: #45cf95 !important;
+    }
+
+    .sm-st .green {
+        background: #86ba41 !important;
+    }
+
+    .pink {
+        background: #AC75F0 !important;
+    }
+
+    .yellow-b {
+        background: #fdd752 !important;
+    }
+
+    .stat-elem {
+
+        background-color: #fff;
+        padding: 18px;
+        border-radius: 40px;
+
+    }
+
+    .stat-info {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-top: -5px;
+        padding: 8px;
+        -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.05);
+        font-style: italic;
+    }
+
+    .stat-icon {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .st-red {
+        background-color: #F05050;
+    }
+
+    .st-green {
+        background-color: #27C24C;
+    }
+
+    .st-violet {
+        background-color: #7266ba;
+    }
+
+    .st-blue {
+        background-color: #23b7e5;
+    }
+
+    .stats .stat-icon {
+        color: #28bb9c;
+        display: inline-block;
+        font-size: 26px;
+        text-align: center;
+        vertical-align: middle;
+        width: 50px;
+        float: left;
+    }
+
+    .stat {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+
+    .stat .value {
+        font-size: 20px;
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+    }
+
+    .stat .name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 5px 0;
+    }
+
+    .stat.lg .value {
+        font-size: 26px;
+        line-height: 28px;
+    }
+
+    .stat-col {
+        margin: 0 0 10px 0;
+    }
+
+    .stat.lg .name {
+        font-size: 16px;
+    }
+
+    .stat-col .progress {
+        height: 2px;
+    }
+
+    .stat-col .progress-bar {
+        line-height: 2px;
+        height: 2px;
+    }
+
+    .item {
+        padding: 30px 0;
+    }
+
+
+    #statistics .panel {
+        min-height: 150px;
+    }
+
+    #statistics .panel h5 {
+        font-size: 14px;
+    }
+</style>
+
+
+<div class="panel panel-default panel-intro">
+    {:build_heading()}
+
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div id="toolbar" class="toolbar">
+                        <div class="row" style="padding: 10px 0;">
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总注册人数:<span id="tongji1"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日注册人数:<span id="one1"></span></h5>
+                                                    <h5 class="no-margins">昨日注册人数:<span id="two1"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总实名人数:<span id="tongji2"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日实名人数:<span id="one2"></span></h5>
+                                                    <h5 class="no-margins">昨日实名人数:<span id="two2"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总认购人数:<span id="tongji3"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日认购人数:<span id="one3"></span></h5>
+                                                    <h5 class="no-margins">昨日认购人数:<span id="two3"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总充值人数:<span id="tongji4"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日充值人数:<span id="one4"></span></h5>
+                                                    <h5 class="no-margins">昨日充值人数:<span id="two4"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总认购金额:<span id="tongji5"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日认购金额:<span id="one5"></span></h5>
+                                                    <h5 class="no-margins">昨日认购金额:<span id="two5"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总提现金额:<span id="tongji6"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日提现金额:<span id="one6"></span></h5>
+                                                    <h5 class="no-margins">昨日提现金额:<span id="two6"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总充值次数:<span id="tongji7"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日充值次数:<span id="one7"></span></h5>
+                                                    <h5 class="no-margins">昨日充值次数:<span id="two7"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总提现次数:<span id="tongji8"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日提现次数:<span id="one8"></span></h5>
+                                                    <h5 class="no-margins">昨日提现次数:<span id="two8"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总签到人数:<span id="tongji9"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日签到人数:<span id="one9"></span></h5>
+                                                    <h5 class="no-margins">昨日签到人数:<span id="two9"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-md-3">
+                                <div class="panel bg-green-gradient no-border">
+                                    <div class="panel-body">
+                                        <div class="ibox-title">
+                                            <h3>
+                                                总登录人数:<span id="tongji10"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="no-margins">今日登录人数:<span id="one10"></span></h5>
+                                                    <h5 class="no-margins">昨日登录人数:<span id="two10"></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                           data-operate-edit="{:$auth->check('tongji/edit')}"
+                           data-operate-del="{:$auth->check('tongji/del')}"
+                           width="100%">
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

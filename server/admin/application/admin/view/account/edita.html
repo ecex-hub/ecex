@@ -1,0 +1,80 @@
+<form id="edita-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action=""
+      onsubmit="submitForm(event)">
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">手机号</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-account" class="form-control" name="row[account]" type="number"
+                   value="{$row.account|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">用户名</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-nickname" class="form-control" name="row[nickname]" value="{$row.nickname|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">实名信息</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-realName" class="form-control" name="row[realName]" value="{$row.realName|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">身份证号</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDCard" class="form-control" name="row[IDCard]" value="{$row.IDCard|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local" class="control-label col-xs-12 col-sm-2">{:__('IDFrontUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" name="row[IDFrontUrl]" id="c-local" class="form-control"
+                   value="{$row.IDFrontUrl|htmlentities}"/>
+            <ul class="row list-inline faupload-preview" id="p-local"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local" class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="button" id="faupload-local" class="btn btn-primary faupload" data-input-id="c-local"
+                    data-multiple="true" data-preview-id="p-local" data-url="{:url('ajax/upload')}"><i
+                    class="fa fa-upload"></i> 上传图片
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local" class="control-label col-xs-12 col-sm-2">{:__('IDOppositeUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" name="row[IDOppositeUrl]" id="c-local-1" class="form-control"
+                   value="{$row.IDOppositeUrl|htmlentities}"/>
+            <ul class="row list-inline faupload-preview" id="p-local-1"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local" class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="button" id="faupload-local-1" class="btn btn-primary faupload" data-input-id="c-local-1"
+                    data-multiple="true" data-preview-id="p-local-1" data-url="{:url('ajax/upload')}"><i
+                    class="fa fa-upload"></i> 上传图片
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">提现密码</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-payPassword" class="form-control" name="row[payPassword]" value="" placeholder="不修改则此处不填写">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">登录密码</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-password" class="form-control" name="row[password]" value="" placeholder="不修改则此处不填写">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

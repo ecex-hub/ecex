@@ -1,0 +1,45 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('RealName')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-realName" class="form-control" name="row[realName]" type="text" value="{$row.realName|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDCard')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDCard" class="form-control" name="row[IDCard]" type="text" value="{$row.IDCard|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDFrontUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDFrontUrl" class="form-control" name="row[IDFrontUrl]" type="text" value="{$row.IDFrontUrl|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDOppositeUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDOppositeUrl" class="form-control" name="row[IDOppositeUrl]" type="text" value="{$row.IDOppositeUrl|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Itime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-itime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[itime]" type="text" value="{:$row.itime?datetime($row.itime):''}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Utime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-utime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[utime]" type="text" value="{:$row.utime?datetime($row.utime):''}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

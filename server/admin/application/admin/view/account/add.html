@@ -1,0 +1,293 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Account')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-account" data-rule="required" class="form-control" name="row[account]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Password')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-password" data-rule="required" class="form-control" name="row[password]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Invite_code')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-invite_code" class="form-control" name="row[invite_code]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('PayPassword')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-payPassword" data-rule="required" class="form-control" name="row[payPassword]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Nickname')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-nickname" class="form-control" name="row[nickname]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Head')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-head" class="form-control" name="row[head]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('RechargeAllMoney')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rechargeAllMoney" class="form-control" step="0.01" name="row[rechargeAllMoney]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('WithdrawalAllMoney')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-withdrawalAllMoney" class="form-control" step="0.01" name="row[withdrawalAllMoney]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('AccountIncome')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-accountIncome" class="form-control" step="0.01" name="row[accountIncome]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Money')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-money" class="form-control" step="0.01" name="row[money]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Dream_fund')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-dream_fund" class="form-control" step="0.01" name="row[dream_fund]" type="number" value="0.00">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pay_back')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-pay_back" class="form-control" step="0.01" name="row[pay_back]" type="number" value="0.00">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Allowance')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-allowance" class="form-control" step="0.01" name="row[allowance]" type="number" value="0.00">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('StandbyPay')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-standbyPay" class="form-control" step="0.01" name="row[standbyPay]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('GoldBrick')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-goldBrick" class="form-control" step="0.01" name="row[goldBrick]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('OneLevel')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-oneLevel" class="form-control" name="row[oneLevel]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('TwoLevel')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-twoLevel" class="form-control" name="row[twoLevel]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('ThreeLevel')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-threeLevel" class="form-control" name="row[threeLevel]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('PromotionIncome')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-promotionIncome" class="form-control" step="0.01" name="row[promotionIncome]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('OneIncome')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-oneIncome" class="form-control" step="0.01" name="row[oneIncome]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('TwoIncome')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-twoIncome" class="form-control" step="0.01" name="row[twoIncome]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('ThreeIncome')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-threeIncome" class="form-control" step="0.01" name="row[threeIncome]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('OneSharePeople')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-oneSharePeople" class="form-control" name="row[oneSharePeople]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('TwoSharePeople')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-twoSharePeople" class="form-control" name="row[twoSharePeople]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('ThreeSharePeople')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-threeSharePeople" class="form-control" name="row[threeSharePeople]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('OneReward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-oneReward" class="form-control" name="row[oneReward]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('TwoReward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-twoReward" class="form-control" name="row[twoReward]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('ThreeReward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-threeReward" class="form-control" name="row[threeReward]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('InvestAllMoney')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-investAllMoney" class="form-control" step="0.01" name="row[investAllMoney]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('VipGrade')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-vipGrade" class="form-control" name="row[vipGrade]" type="number" value="1">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('RealName')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-realName" class="form-control" name="row[realName]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDCard')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDCard" class="form-control" name="row[IDCard]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDFrontUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDFrontUrl" class="form-control" name="row[IDFrontUrl]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDOppositeUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDOppositeUrl" class="form-control" name="row[IDOppositeUrl]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('IDHandUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-IDHandUrl" class="form-control" name="row[IDHandUrl]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('BonusShare')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-bonusShare" class="form-control" step="0.01" name="row[bonusShare]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('InitialShare')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-initialShare" class="form-control" step="0.01" name="row[initialShare]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('JwtToken')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-jwtToken" class="form-control" name="row[jwtToken]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('ApiSecret')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-apiSecret" class="form-control" name="row[apiSecret]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Auth_key')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-auth_key" class="form-control" name="row[auth_key]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('TransferType')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-transferType" class="form-control" name="row[transferType]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('RegisterIp')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-RegisterIp" class="form-control" name="row[RegisterIp]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('E_uid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-e_uid" class="form-control" name="row[e_uid]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Avatar')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-avatar" class="form-control" size="50" name="row[avatar]" type="text" value="">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="faupload-avatar" class="btn btn-danger faupload" data-input-id="c-avatar" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" data-multiple="false" data-preview-id="p-avatar"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-avatar" class="btn btn-primary fachoose" data-input-id="c-avatar" data-mimetype="image/*" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-avatar"></span>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-avatar"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Is_real')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-is_real" class="form-control" name="row[is_real]" type="number" value="1">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Buy_product_money')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-buy_product_money" class="form-control" step="0.01" name="row[buy_product_money]" type="number" value="0.00">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

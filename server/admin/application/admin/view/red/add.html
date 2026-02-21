@@ -1,0 +1,96 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">用户ID</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-uid" data-rule="required" class="form-control" name="row[uid]" type="number" value="0">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">用户名
+        </label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="nickname" class="form-control" value="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">红包类型</label>
+        <input class="form-check-input" type="radio" name="row[type]" value="1" checked>
+        <label class="form-check-label">
+            普通红包
+        </label>
+        <input class="form-check-input" type="radio" name="row[type]" value="2">
+        <label class="form-check-label">
+            指定红包
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">抽奖次数</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-num" data-rule="required" class="form-control" name="row[num]" type="number">
+        </div>
+    </div>
+    <div class="form-group" id="money-1">
+        <label class="control-label col-xs-12 col-sm-2">红包金额</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-money" class="form-control" name="row[money]">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function toggleUrlField() {
+            if ($("input[name='row[type]']:checked").val() == "1") {
+                $("#money-1").hide();
+            }
+
+            if ($("input[name='row[type]']:checked").val() == "2") {
+                $("#money-1").show();
+            }
+        }
+
+        // Initially check if the radio is set to "内部新闻", then hide the URL field
+        toggleUrlField();
+
+        // Listen for changes on the radio buttons
+        $("input[name='row[type]']").change(function () {
+            toggleUrlField();
+        });
+    });
+
+    $(document).ready(function () {
+        // 监听输入框失去焦点事件
+        $('#c-uid').on('blur', function () {
+            var uid = $(this).val(); // 获取输入框的值
+
+            if (uid) { // 如果输入框有内容
+
+                // 发送 AJAX 请求
+                $.ajax({
+                    url: '/stock.php/red/search', // Yii 2 控制器方法
+                    type: 'GET', // 请求类型
+                    data: {uid: uid}, // 传递的参数
+                    success: function (data) {
+                        // 处理返回的数据（假设是一个用户信息）
+                        if (data.nickname) {
+                            $("#nickname").val(data.nickname);
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        });
+    });
+</script>

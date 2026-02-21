@@ -1,0 +1,118 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Title')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-title" data-rule="required" class="form-control" name="row[title]" type="text"
+                   value="{$row.title|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local" class="control-label col-xs-12 col-sm-2">{:__('CoverUrl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" name="row[coverUrl]" id="c-local" class="form-control"
+                   value="{$row.coverUrl|htmlentities}"/>
+            <ul class="row list-inline faupload-preview" id="p-local"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local" class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="button" id="faupload-local" class="btn btn-primary faupload" data-input-id="c-local"
+                    data-multiple="true" data-preview-id="p-local" data-url="{:url('ajax/upload')}"><i
+                    class="fa fa-upload"></i> 上传图片
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-local-1" class="control-label col-xs-12 col-sm-2">{:__('Video_url')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" name="row[video_url]" id="c-local-1" class="form-control"
+                   value="{$row.video_url|htmlentities}"/>
+            <ul class="row list-inline faupload-preview" id="p-local-1"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-local-1" class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="button" id="faupload-local-1" class="btn btn-primary faupload" data-input-id="c-local-1"
+                    data-multiple="true" data-preview-id="p-local-1" data-url="{:url('ajax/upload')}"><i
+                    class="fa fa-upload"></i> 上传视频
+            </button>
+        </div>
+    </div>
+<!--    <div class="form-group">-->
+<!--        <label class="control-label col-xs-12 col-sm-2">{:__('Video_duration')}:</label>-->
+<!--        <div class="col-xs-12 col-sm-8">-->
+<!--            <input id="c-video_duration" data-rule="required" class="form-control" name="row[video_duration]"-->
+<!--                   type="number" value="{$row.video_duration|htmlentities}">-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Is_hot')}:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="row[is_hot]" value="0"
+                   {if $row.is_hot== 0} checked="checked" {/if}>
+            <label class="form-check-label">
+                否
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="row[is_hot]" value="1"
+                   {if $row.is_hot== 1} checked="checked" {/if}>
+            <label class="form-check-label">
+                是
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Is_new')}:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="row[is_new]" value="0"
+                   {if $row.is_new== 0} checked="checked" {/if}>
+            <label class="form-check-label">
+                否
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="row[is_new]" value="1"
+                   {if $row.is_new== 1} checked="checked" {/if}
+            >
+            <label class="form-check-label">
+                是
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sort')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sort" class="form-control" name="row[sort]" type="number" value="{$row.sort|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Itime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-itime" data-rule="required" class="form-control datetimepicker"
+                   data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[itime]" type="text"
+                   value="{:$row.itime?datetime($row.itime):''}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Utime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-utime" data-rule="required" class="form-control datetimepicker"
+                   data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[utime]" type="text"
+                   value="{:$row.utime?datetime($row.utime):''}">
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

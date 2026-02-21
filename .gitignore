@@ -7,6 +7,7 @@ server/admin/runtime/
 # Environment files with real credentials
 deploy/backend/.env
 deploy/frontend/.env
+server/admin/.env
 
 # OS files
 .DS_Store

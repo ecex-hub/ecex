@@ -1,0 +1,102 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pay_type')}:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="row[pay_type]" value="1" {if $row.pay_type== 1}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                支付宝
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_type]" value="2" {if $row.pay_type== 2}
+                   checked="checked" {/if} >
+            <label class="form-check-label">
+                微信
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_type]" value="3" {if $row.pay_type== 3}
+                   checked="checked" {/if} >
+            <label class="form-check-label">
+                银行卡
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_type]" value="4" {if $row.pay_type== 4}
+                   checked="checked" {/if} >
+            <label class="form-check-label">
+                云闪付
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pay_mch')}:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="1" {if $row.pay_mch== 1}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                福海支付
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="2" {if $row.pay_mch== 2}
+                   checked="checked" {/if} >
+            <label class="form-check-label">
+                桥头支付
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="3" {if $row.pay_mch== 3}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                alin支付
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="4" {if $row.pay_mch== 4}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                四海支付
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="5" {if $row.pay_mch== 5}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                四海-云四方
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="6" {if $row.pay_mch== 6}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                大圣支付
+            </label>
+            <input class="form-check-input" type="radio" name="row[pay_mch]" value="7" {if $row.pay_mch== 7}
+                   checked="checked" {/if}>
+            <label class="form-check-label">
+                PT中外支付
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('min_price')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-min_price" class="form-control " name="row[min_price]"
+                   value="{$row.min_price|htmlentities}"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Max_price')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-max_price" class="form-control " name="row[max_price]"
+                   value="{$row.max_price|htmlentities}"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sort')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sort" data-rule="required" class="form-control" name="row[sort]" type="number"
+                   value="{$row.sort|htmlentities}">
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>
