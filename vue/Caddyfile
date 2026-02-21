@@ -56,3 +56,29 @@ ecex.cc {
     }
 }
 
+# 管理后台 - admin.ecex.cc
+admin.ecex.cc {
+    # 反向代理到后端管理后台服务
+    reverse_proxy http://172.16.0.87:8097 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # 安全头部
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        -Server
+    }
+
+    # 访问日志
+    log {
+        output file /var/log/caddy/admin-access.log
+        format json
+    }
+}
+

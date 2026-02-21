@@ -1,0 +1,9 @@
+.env
+.git
+.gitignore
+runtime/cache/*
+runtime/log/*
+runtime/temp/*
+*.md
+nginx.conf
+

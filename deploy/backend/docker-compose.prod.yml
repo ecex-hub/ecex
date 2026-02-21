@@ -67,6 +67,38 @@ services:
     networks:
       - backend-network
 
+  # 管理后台 - ThinkPHP FastAdmin
+  admin:
+    image: ghcr.io/ecex-hub/ecex/admin:latest
+    container_name: fastadmin-app
+    restart: always
+    ports:
+      - "8097:80"
+    volumes:
+      - ./admin-runtime:/var/www/html/runtime
+      - ./admin-uploads:/var/www/html/public/uploads
+      - ./admin-logs:/var/log
+    environment:
+      - PHP_DATABASE_HOSTNAME=mysql
+      - PHP_DATABASE_DATABASE=${DB_NAME}
+      - PHP_DATABASE_USERNAME=${DB_USER}
+      - PHP_DATABASE_PASSWORD=${DB_PASSWORD}
+      - PHP_DATABASE_HOSTPORT=3306
+      - PHP_DATABASE_PREFIX=t_
+      - PHP_DATABASE_CHARSET=utf8mb4
+      - PHP_REDIS_HOST=redis
+      - PHP_REDIS_PORT=6379
+      - PHP_REDIS_PASSWORD=${REDIS_PASSWORD}
+      - PHP_REDIS_PREFIX=admin_
+      - PHP_APP_DEBUG=false
+      - PHP_APP_TRACE=false
+      - PHP_APP_CDN_URL=
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - backend-network
+
 networks:
   backend-network:
     driver: bridge
