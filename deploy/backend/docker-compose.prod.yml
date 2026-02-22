@@ -76,7 +76,7 @@ services:
       - "8097:80"
     volumes:
       - ./admin-runtime:/var/www/html/runtime
-      - ./admin-uploads:/var/www/html/public/uploads
+      - ./uploads:/var/www/html/public/uploads
       - ./admin-logs:/var/log
     environment:
       - PHP_DATABASE_HOSTNAME=mysql

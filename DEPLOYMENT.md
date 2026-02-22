@@ -146,7 +146,7 @@ bash deploy.sh
 # 9. 导入数据库（首次部署）
 # 等待 MySQL 启动完成
 sleep 30
-docker exec -i yii2-mysql mysql -uroot -p"${EcEx@MySQL#2026!Prod$$Secure}" ecex < db.sql
+docker exec -i yii2-mysql mysql -uroot -p'EcEx@MySQL#2026!Prod$Secure' ecex < db.sql
 
 # 10. 验证服务
 curl http://localhost:8080
@@ -350,7 +350,7 @@ docker-compose -f docker-compose.prod.yml logs -f app
 docker-compose -f docker-compose.prod.yml logs --tail 50 app
 
 # Yii2 应用错误日志（记录在数据库 t_system_log 表中）
-docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "SELECT * FROM t_system_log ORDER BY id DESC LIMIT 20;"
+docker exec yii2-mysql mysql -uroot -p'EcEx@MySQL#2026!Prod$Secure' ecex -e "SELECT * FROM t_system_log ORDER BY id DESC LIMIT 20;"
 
 # Yii2 请求日志
 docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "SELECT * FROM t_request_log ORDER BY id DESC LIMIT 20;"
@@ -468,8 +468,8 @@ docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "
   GROUP BY table_schema;"
 
 # 清除错误日志表
-docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "DELETE FROM t_system_log;"
-docker exec yii2-mysql mysql -uroot -p'你的数据库密码' ecex -e "DELETE FROM t_request_log;"
+docker exec yii2-mysql mysql -uroot -p'EcEx@MySQL#2026!Prod$Secure' ecex -e "DELETE FROM t_system_log;"
+docker exec yii2-mysql mysql -uroot -p'EcEx@MySQL#2026!Prod$Secure' ecex -e "DELETE FROM t_request_log;"
 
 # 查看 MySQL 连接数
 docker exec yii2-mysql mysql -uroot -p'你的数据库密码' -e "SHOW STATUS LIKE 'Threads_connected';"
