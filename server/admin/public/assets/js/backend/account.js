@@ -1,7 +1,133 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
     var Controller = {
-        index: function () {
+        team: function () {
+            // 初始化表格参数配置
+            Table.api.init({
+                extend: {
+                    index_url: 'account/index' + location.search,
+                    add_url: 'account/add',
+                    // edit_url: 'account/edit',
+                    // del_url: 'account/del',
+                    multi_url: 'account/multi',
+                    import_url: 'account/import',
+                    table: 'account_info',
+                }
+            });
+
+            var table = $("#table");
+
+            // 初始化表格
+            table.bootstrapTable({
+                url: $.fn.bootstrapTable.defaults.extend.index_url,
+                pk: 'uid',
+                sortName: 'uid',
+                fixedColumns: true,
+                fixedRightNumber: 1,
+                search: false,
+                columns: [
+                    [
+                        {field: 'uid', title: __('Uid')},
+                        {
+                            field: 'nickname',
+                            title: __('Nickname'),
+                            operate: 'LIKE',
+                            table: table,
+                            class: 'autocontent',
+                            formatter: Table.api.formatter.content
+                        },
+                        {field: 'oneLevel', title: __('OneLevel')},                      
+                        
+                        {field: 'oneSharePeople', title: '一级人数', operate: false},
+                        {field: 'twoSharePeople', title:'二级人数', operate: false},                                                
+                        {field: 'threeSharePeople', title:'三级人数', operate: false},                                                
+                        {field: 'threeSharePeople', title:'其他人数', operate: false}
+                    ]
+                ]
+            });
+
+            // 为表格绑定事件
+            Table.api.bindevent(table);
+
+            $(document).on("click", ".btn-export", function () {
+                var url = $(this).attr('data-url');
+                console.log(url)
+                window.open(url);
+            });
+        },
+		 tongji: function () {
+            // 初始化表格参数配置
+            Table.api.init({
+                extend: {
+                    index_url: 'account/index' + location.search,
+                    add_url: 'account/add',
+                    // edit_url: 'account/edit',
+                    // del_url: 'account/del',
+                    multi_url: 'account/multi',
+                    import_url: 'account/import',
+                    table: 'account_info',
+                }
+            });
+
+            var table = $("#table");
+
+            // 初始化表格
+            table.bootstrapTable({
+                url: $.fn.bootstrapTable.defaults.extend.index_url,
+                pk: 'uid',
+                sortName: 'uid',
+                fixedColumns: true,
+                fixedRightNumber: 1,
+                search: false,
+                columns: [
+                    [
+                        {field: 'uid', title: __('Uid')},
+                        {
+                            field: 'nickname',
+                            title: __('Nickname'),
+                            operate: 'LIKE',
+                            table: table,
+                            class: 'autocontent',
+                            formatter: Table.api.formatter.content
+                        },
+                        {field: 'oneLevel', title: __('OneLevel')},                      
+                        {
+                            field: 'account',
+                            title: __('Account'),
+                            operate: 'LIKE',
+                            table: table,
+                            class: 'autocontent',
+                            formatter: Table.api.formatter.content
+                        },
+                        {field: 'rechargeAllMoney', title: '总充值', operate: false},
+                        {field: 'withdrawalAllMoney', title:'总提现', operate: false},                                                
+                        {
+                            field: 'realName',
+                            title: __('RealName'),
+                            operate: false,
+                        },
+                        {field: 'IDCard', title: __('IDCard'), operate: 'LIKE'},
+                        {
+                            field: 'itime',
+                            title: __('Itime'),
+                            operate: false,
+                            formatter: Table.api.formatter.datetime
+                        }                      
+                       
+                    ]
+                ]
+            });
+
+            // 为表格绑定事件
+            Table.api.bindevent(table);
+
+            $(document).on("click", ".btn-export", function () {
+                var url = $(this).attr('data-url');
+                console.log(url)
+                window.open(url);
+            });
+        },
+		index: function () {
             // 初始化表格参数配置
             Table.api.init({
                 extend: {

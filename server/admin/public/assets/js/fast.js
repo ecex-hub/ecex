@@ -121,13 +121,13 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 if (!name)
                     return '';
                 name = name.replace(/[\[\]]/g, "\\$&");
-                var regex = new RegExp("[?&/]" + name + "([=/]([^&#/?]*)|&|#|$)"),
+                var regex = new RegExp("[?&]" + name + "=([^&#]*)"),
                     results = regex.exec(url);
                 if (!results)
                     return null;
-                if (!results[2])
+                if (!results[1])
                     return '';
-                return decodeURIComponent(results[2].replace(/\+/g, " "));
+                return decodeURIComponent(results[1].replace(/\+/g, " "));
             },
             //打开一个弹出窗口
             open: function (url, title, options) {

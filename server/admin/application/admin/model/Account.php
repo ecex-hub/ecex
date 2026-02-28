@@ -25,7 +25,14 @@ class Account extends Model
 
     ];
 
-
+  
+    public function upuser()
+    {
+        // 只获取上级用户的关键字段，避免返回过多无用数据
+        return $this->belongsTo('app\admin\model\Account', 'oneLevel', 'uid' ,[], 'LEFT')
+            ->field('uid,nickname')
+            ->setEagerlyType(1);
+    }
     public function bank()
     {
         return $this->belongsTo(

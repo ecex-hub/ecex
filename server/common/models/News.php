@@ -150,10 +150,12 @@ class News extends BaseModel
     {
 
         // 如果缓存不存在，则执行数据库查询
+        
         $where = [
             'and',
-            ['=', 'type', 1]
+            ['=', 'display_position', 1]
         ];
+        //$where = [];
         $list = $this->listFind(['page' => $page, 'row' => $limit])
             ->orderBy(['itime' => SORT_DESC])
             ->where($where)->asArray()->all();

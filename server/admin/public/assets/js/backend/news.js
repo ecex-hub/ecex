@@ -41,41 +41,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Table.api.formatter.content
                         },
                         {
-                            field: 'subtitle',
-                            title: "副标题",
-                            operate: 'LIKE',
-                            table: table,
-                            class: 'autocontent',
-                            formatter: Table.api.formatter.content
-                        },
-                        {
-                            field: 'author',
-                            title: __('Author'),
-                            operate: 'LIKE',
-                            table: table,
-                            class: 'autocontent',
-                            formatter: Table.api.formatter.content
-                        },
-                        {
-                            field: 'new_type',
+                            field: 'type',
                             title: "新闻类型",
                             operate: false,
                             class: 'autocontent',
-                            formatter: Table.api.formatter.content
+                            formatter: Controller.api.formatter.type
                         },
                         {
-                            field: 'is_new',
-                            title: __('Is_new'),
+                            field: 'display_position',
+                            title: "显示位置",
                             operate: false,
                             class: 'autocontent',
-                            formatter: Table.api.formatter.content
+                            formatter: Controller.api.formatter.display_position
                         },
                         {
                             field: 'url',
                             title: "跳转链接",
                             operate: false,
                             class: 'autocontent',
-                            formatter: Table.api.formatter.content
+                            formatter: Controller.api.formatter.url
                         },
                         {
                             field: 'itime',
@@ -106,6 +90,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
         },
         add: function () {
+            // 配置表单验证器，忽略隐藏字段
+            $("form#add-form").data("validator-options", {
+                ignore: ':hidden'
+            });
             Controller.api.bindevent();
         },
         edit: function () {
@@ -141,7 +129,57 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     });
 
                     return html.join(' ');
-                }
+                },
+                type: function (value, row, index) {
+                    // 将 type 值转换为对应的文字和颜色标签
+                    // 1 对应 "内部新闻"，2 对应 "外部新闻"
+                    var typeMap = {
+                        '1': { text: '内部新闻', color: 'warning' },
+                        '2': { text: '外部新闻', color: 'info' },
+                        '3': { text: '纯图新闻', color: 'danger' },
+                        1: { text: '内部新闻', color: 'warning' },
+                        2: { text: '外部新闻', color: 'info' },
+                        3: { text: '纯图新闻', color: 'danger' }
+                    };
+                    var type = typeMap[value];
+                    if (type) {
+                        return '<span class="label label-' + type.color + '">' + type.text + '</span>';
+                    }
+                    return value || '';
+                },
+                display_position: function (value, row, index) {
+                    // 将 display_position 值转换为对应的文字和颜色标签
+                    var positionMap = {
+                        '1': { text: '首页', color: 'primary' },
+                        '2': { text: '平台资讯', color: 'success' },
+                        '3': { text: '宣传栏目', color: 'warning' },
+                        1: { text: '首页', color: 'primary' },
+                        2: { text: '平台资讯', color: 'success' },
+                        3: { text: '宣传栏目', color: 'warning' }
+                    };
+                    var position = positionMap[value];
+                    if (position) {
+                        return '<span class="label label-' + position.color + '">' + position.text + '</span>';
+                    }
+                    return value || '';
+                },
+                url: function (value, row, index) {
+                    // 将 URL 显示为可点击的链接
+                    if (!value || value === '') {
+                        return '<span class="text-muted">-</span>';
+                    }
+                    // 确保 URL 包含协议
+                    var url = value;
+                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                        url = 'https://' + url;
+                    }
+                    // 截断过长的 URL 显示
+                    var displayText = value;
+                    if (displayText.length > 50) {
+                        displayText = displayText.substring(0, 50) + '...';
+                    }
+                    return '<a href="' + url + '" target="_blank" title="' + value + '" class="text-primary">' + displayText + '</a>';
+                },
             }
         }
     };

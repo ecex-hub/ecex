@@ -11,13 +11,34 @@
         />
       </div>
 
-      <!-- 主横幅 -->
+      <!-- 主横幅轮播图 -->
       <div class="main-banner">
-        <img
-          src="@/assets/images/backgrounds/banner.png"
-          alt="主横幅"
-          class="main-banner-image"
-        />
+        <van-swipe 
+          :autoplay="3000" 
+          indicator-color="white"
+          class="banner-swipe"
+        >
+          <van-swipe-item 
+            v-for="banner in bannerList" 
+            :key="banner.id"
+            @click="handleBannerClick(banner)"
+          >
+            <img 
+              :src="banner.picUrl" 
+              :alt="banner.title" 
+              class="banner-slide-image"
+            />         
+          </van-swipe-item>
+          
+          <!-- 空状态 -->
+          <van-swipe-item v-if="!bannerList.length">
+            <img
+              src="@/assets/images/backgrounds/banner.png"
+              alt="默认横幅"
+              class="banner-slide-image"
+            />
+          </van-swipe-item>
+        </van-swipe>
       </div>
 
       <!-- 快捷导航 -->
@@ -70,7 +91,7 @@
           v-for="item in newsList"
           :key="item.id"
           class="news-item"
-          @click="$router.push('/news')"
+          @click="handleNewsClick(item)"
         >
           <div class="news-thumb">
             <img :src="item.coverUrl || newsImg" alt="新闻图片" class="thumb-image" />
@@ -81,7 +102,7 @@
             </div>
             <div class="news-footer">
               <div class="news-tag">
-                {{ item.is_new ? '最新' : '新闻' }}
+               二重二新
               </div>
               <div class="news-date">
                 {{ formatDate(item.itime) }}
@@ -99,6 +120,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { showFailToast } from 'vant'
 import signIcon from '@/assets/icons/png/menu/sign.png'
 import newsIcon from '@/assets/icons/png/menu/news.png'
 import helpIcon from '@/assets/icons/png/menu/help.png'
@@ -106,9 +129,12 @@ import rewardIcon from '@/assets/icons/png/menu/reward.png'
 import mallIcon from '@/assets/icons/png/menu/m.png'
 import newsImg from '@/assets/icons/png/newsimg.png'
 import emptyImg from '@/assets/icons/png/empty.png'
-import { newsApi } from '@/api'
+import { newsApi, homeApi } from '@/api'
+
+const router = useRouter()
 
 const newsList = ref([])
+const bannerList = ref([])
 
 // 格式化时间戳为 YYYY-MM-DD
 const formatDate = (timestamp) => {
@@ -120,22 +146,110 @@ const formatDate = (timestamp) => {
   return `${y}-${m}-${d}`
 }
 
-const loadNews = async () => {
+// 加载首页所有数据
+const loadHomeData = async () => {
   try {
-    const res = await newsApi.getNewsList({
-      page: 1,
-      size: 3
-    })
-    // 后端有可能是 { data: { list: [...] } } 或 { list: [...] }
-    const list = res?.data?.list || res?.data?.data?.list || []
-    newsList.value = list
-  } catch (e) {
-    console.error('获取新闻列表失败', e)
+    const res = await homeApi.getIndexData()
+    
+    // 处理轮播图数据
+    const banners = res?.data?.carousel || res?.data?.carousel || []
+    bannerList.value = banners.map(item => ({
+      id: item.id,
+      title: item.title || '',
+      picUrl: item.picUrl || '',
+      linkUrl: item.link_url || item.linkUrl || '',
+      targetType: item.target_type || item.targetType || 'internal'
+    }))
+    
+    // 处理新闻数据
+    const news = res?.data?.news || res?.data?.newsList || []
+    newsList.value = news.slice(0, 3) // 只取前3条
+    
+  } catch (error) {
+    console.error('获取首页数据失败:', error)
+    // 降级处理：单独获取各部分数据
+    await loadFallbackData()
+  }
+}
+
+// 降级数据加载（当统一接口失败时使用）
+const loadFallbackData = async () => {
+  try {
+    // 并行加载轮播图和新闻
+    const [bannerRes, newsRes] = await Promise.allSettled([
+      homeApi.getBannerList?.({ position: 'home_main', status: 1 }) || Promise.resolve({ data: [] }),
+      newsApi.getNewsList({ page: 1, size: 3 })
+    ])
+    
+    // 处理轮播图数据
+    if (bannerRes.status === 'fulfilled') {
+      const bannerData = bannerRes.value?.data?.list || bannerRes.value?.data || []
+      bannerList.value = bannerData.map(item => ({
+        id: item.id,
+        title: item.title || '',
+        imageUrl: item.image_url || item.imageUrl || '',
+        linkUrl: item.link_url || item.linkUrl || '',
+        targetType: item.target_type || item.targetType || 'internal'
+      }))
+    }
+    
+    // 处理新闻数据
+    if (newsRes.status === 'fulfilled') {
+      const newsData = newsRes.value?.data?.list || newsRes.value?.data?.data?.list || []
+      newsList.value = newsData
+    }
+  } catch (error) {
+    console.error('降级数据加载失败:', error)
+  }
+}
+
+// 处理新闻点击事件
+const handleNewsClick = (item) => {
+  // type=2 表示外部新闻，跳转到外部 URL
+  // type=1 表示内部新闻，跳转到新闻详情页
+  // 注意：后端返回的字段可能是 type 或 new_type
+  const newsType = item.type || item.new_type
+  
+  if (newsType == 2 || newsType == '2') {
+    // 外部新闻，跳转到外部 URL
+    if (item.url) {
+      // 检查 URL 是否包含协议，如果没有则添加 https://
+      let url = item.url
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url
+      }
+      window.open(url, '_blank')
+    }
+  } else {
+    // 内部新闻，跳转到新闻详情页
+    router.push(`/news/detail/${item.id}`)
+  }
+}
+
+// 处理轮播图点击事件
+const handleBannerClick = (banner) => {
+  if (!banner.linkUrl) return
+  
+  try {
+    if (banner.targetType === 'external') {
+      // 外部链接，新窗口打开
+      let url = banner.linkUrl
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url
+      }
+      window.open(url, '_blank')
+    } else {
+      // 内部链接，路由跳转
+      router.push(banner.linkUrl)
+    }
+  } catch (error) {
+    console.error('轮播图跳转失败:', error)
+    showFailToast('跳转失败')
   }
 }
 
 onMounted(() => {
-  loadNews()
+  loadHomeData()
 })
 </script>
 
@@ -186,7 +300,7 @@ onMounted(() => {
   padding: 16px;
   width: 100%;
   
-}
+} 
 
 .main-banner-image {
   width: 100%;
@@ -380,5 +494,55 @@ onMounted(() => {
   width: 120px;
   height: auto;
   opacity: 0.6;
+}
+
+/* 主横幅轮播图样式 */
+
+.banner-swipe {
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.banner-slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 确保 van-swipe 正确显示 */
+:deep(.van-swipe) {
+  width: 100%;
+  height: 180px;
+  position: relative;
+}
+
+:deep(.van-swipe__track) {
+  height: 100%;
+}
+
+:deep(.van-swipe-item) {
+  width: 100%;
+  height: 100%;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* 轮播图指示器样式 */
+:deep(.van-swipe__indicators) {
+  bottom: 12px;
+}
+
+:deep(.van-swipe__indicator) {
+  background: rgba(255,255,255,0.5);
+  width: 8px;
+  height: 8px;
+}
+
+:deep(.van-swipe__indicator--active) {
+  background: white;
 }
 </style>

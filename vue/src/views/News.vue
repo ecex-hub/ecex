@@ -31,7 +31,7 @@
           <span class="section-title">平台资讯</span>
         </div>
         <div class="platform-grid">
-          <div class="platform-card" v-for="(item, index) in platformItems" :key="index">
+          <div class="platform-card" v-for="(item, index) in platformItems" :key="index" @click="handleNewsClick(item)">
             <img :src="item.icon" :alt="item.title" class="card-icon" />
             <div class="card-right">
               <img :src="item.titleicon" :alt="item.title" class="title-icon" />
@@ -52,6 +52,7 @@
             v-for="(item, index) in promotionList" 
             :key="index" 
             class="promotion-item"
+            @click="handleVideoClick(item)"
           >
             <div class="promotion-thumb">
               <img :src="item.thumb" :alt="item.title" class="thumb-image" />
@@ -64,6 +65,9 @@
               </div>
             </div>
           </div>
+          <div v-if="!promotionList.length" class="empty-text">
+            <img :src="emptyImg" alt="暂无宣传栏目" class="empty-image" />
+          </div>
         </div>
       </div>
     </div>
@@ -71,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import icon1 from '@/assets/icons/png/news/1.png'
 import icon2 from '@/assets/icons/png/news/2.png'
 import icon3 from '@/assets/icons/png/news/3.png'
@@ -81,8 +85,10 @@ import icon6 from '@/assets/icons/png/news/6.png'
 import thumb1 from '@/assets/icons/png/news/n1.png'
 import thumb2 from '@/assets/icons/png/news/n2.png'
 import readIcon from '@/assets/icons/png/news/read.png'
-import backImage from '@/assets/icons/png/news/back.png'
-
+import emptyImg from '@/assets/icons/png/empty.png'
+import { useRouter } from 'vue-router'
+import { newsApi, videoApi } from '@/api'
+import { showLoadingToast, closeToast, showToast } from 'vant'
 import titleicon1 from '@/assets/icons/png/news/11.png'
 import titleicon2 from '@/assets/icons/png/news/22.png'
 import titleicon3 from '@/assets/icons/png/news/33.png'
@@ -90,27 +96,135 @@ import titleicon4 from '@/assets/icons/png/news/44.png'
 import titleicon5 from '@/assets/icons/png/news/55.png'
 import titleicon6 from '@/assets/icons/png/news/66.png'
 
+const router = useRouter()
+
 const platformItems = ref([
-  { title: '项目说明', icon: icon1,titleicon: titleicon1 },
-  { title: '发展前景', icon: icon2,titleicon: titleicon2 },
-  { title: '资金合规', icon: icon3,titleicon: titleicon3 },
-  { title: '法律文件', icon: icon4,titleicon: titleicon4 },
-  { title: '政企合作', icon: icon5,titleicon: titleicon5 },
-  { title: '公益慈善', icon: icon6,titleicon: titleicon6 }
+  { title: '项目说明', icon: icon1,titleicon: titleicon1,id: 1 },
+  { title: '发展前景', icon: icon2,titleicon: titleicon2,id: 2 },
+  { title: '资金合规', icon: icon3,titleicon: titleicon3,id: 3 },
+  { title: '法律文件', icon: icon4,titleicon: titleicon4,id: 4 },
+  { title: '政企合作', icon: icon5,titleicon: titleicon5,id: 5 },
+  { title: '公益慈善', icon: icon6,titleicon: titleicon6,id: 6 }
 ])
 
-const promotionList = ref([
-  {
-    title: '优化实施"两新"政策"两重"项目——国家发展改革委解...',
-    thumb: thumb1,
-    time: '13:56'
-  },
-  {
-    title: '优化实施"两新"政策"两重"项目——国家发展改革委解...',
-    thumb: thumb2,
-    time: '13:56'
+const promotionList = ref([])
+
+// 将秒数转换为时间格式（如 "13:56"）
+const formatDuration = (seconds) => {
+  if (!seconds || seconds <= 0) {
+    return '00:00'
   }
-])
+  const minutes = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+}
+
+// 加载视频列表
+const loadVideoList = async () => {
+  try {
+    const res = await videoApi.getVideoList({
+      page: 1,
+      size: 10
+    })
+    const videoList = res?.data?.list || []
+    
+    // 转换为前端需要的格式
+    promotionList.value = videoList.map(item => ({
+      id: item.id,
+      title: item.title || '',
+      thumb: item.coverUrl || thumb1, // 使用封面图
+      time: formatDuration(item.video_duration || 0),
+      videoUrl: item.videoUrl || '',
+      video_duration: item.video_duration || 0
+    }))
+  } catch (e) {
+    console.error('获取视频列表失败', e)
+    // 如果接口失败，使用默认数据
+    promotionList.value = [
+      {
+        title: '优化实施"两新"政策"两重"项目——国家发展改革委解...',
+        thumb: thumb1,
+        time: '13:56'
+      },
+      {
+        title: '优化实施"两新"政策"两重"项目——国家发展改革委解...',
+        thumb: thumb2,
+        time: '13:56'
+      }
+    ]
+  }
+}
+
+// 组件挂载时加载视频列表
+onMounted(() => {
+  loadVideoList()
+})
+
+
+
+// 处理视频点击事件
+const handleVideoClick = (item) => {
+  if (item.id) {
+    // 跳转到视频播放页面
+    router.push(`/news/video/${item.id}`)
+  } else {
+    showToast('视频信息不完整')
+  }
+}
+
+// 处理新闻点击事件
+const handleNewsClick = async (item) => {
+  // 如果没有 id，直接返回
+  if (!item.id) {
+    return
+  }
+
+  try {
+    // 显示加载提示
+    showLoadingToast({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 0
+    })
+
+    // 先获取新闻详情
+    const res = await newsApi.getNewsDetail(item.id)
+    // 后端返回格式可能是 { data: {...} } 或直接是 {...}
+    const newsDetail = res?.data || res || {}
+    
+    // 关闭加载提示
+    closeToast()
+
+    // 根据详情中的 type 决定跳转方式
+    // type=2 表示外部新闻，跳转到外部 URL
+    // type=1 表示内部新闻，跳转到新闻详情页
+    // 注意：后端返回的字段可能是 type 或 new_type
+    const newsType = newsDetail.type || newsDetail.new_type
+
+    if (newsType == 2 || newsType == '2') {
+      // 外部新闻，跳转到外部 URL
+      if (newsDetail.url) {
+        // 检查 URL 是否包含协议，如果没有则添加 https://
+        let url = newsDetail.url
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url
+        }
+        window.open(url, '_blank')
+      }
+    } else {
+      // 内部新闻，跳转到新闻详情页
+      router.push(`/news/detail/${item.id}`)
+    }
+  } catch (e) {
+    // 关闭加载提示
+    closeToast()
+    console.error('获取新闻详情失败', e)
+    // 如果获取详情失败，默认跳转到详情页
+    router.push(`/news/detail/${item.id}`)
+  }
+}
+
+
 </script>
 
 <style scoped>
@@ -378,5 +492,15 @@ const promotionList = ref([
 .promotion-time {
   font-size: 12px;
   color: #999;
+}
+.empty-text {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.empty-image {
+  width: 120px;
+  height: auto;
+  opacity: 0.6;
 }
 </style>

@@ -51,8 +51,9 @@ service.interceptors.response.use(
     
     // 根据业务状态码处理
     if (res.code !== undefined) {
-      // 业务成功：后端返回 code: 200 表示成功
+      // 业务成功：后端返回 code: 200 或 0 表示成功
       if (res.code === HTTP_STATUS.SUCCESS || res.code === BUSINESS_CODE.SUCCESS) {
+        // 即使 data 为 null 也认为是成功，因为签到接口可能就是这样设计的
         return res
       }
       
@@ -71,15 +72,15 @@ service.interceptors.response.use(
         return Promise.reject(new Error(res.message || '登录已过期'))
       }
       
-      // 其他业务错误（后端返回非 200 的状态码）
+      // 其他业务错误（后端返回非 200/0 的状态码）
       const message = res.message || '请求失败'
       // 使用 setTimeout 确保 toast 能正常显示，避免被后续的 closeToast 关闭
       setTimeout(() => {
         showToast({
           message: message,
-          duration:1000 // 显示 3 秒
+          duration: 1000 // 显示 1 秒
         })
-      }, 1000)
+      }, 100)
       return Promise.reject(new Error(message))
     }
     

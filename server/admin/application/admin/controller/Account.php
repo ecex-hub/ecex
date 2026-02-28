@@ -83,6 +83,90 @@ class Account extends Backend
         $result = ['total' => $list->total(), 'rows' => $list->items()];
         return json($result);
     }
+ public function tongji()
+    {      
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            return $this->view->fetch();
+        }
+        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+        $list = $this->model
+            ->where($where)
+            ->whereIn("account_type", [0, 2])
+            ->order($sort, $order)
+            ->paginate($limit);
+        $isRealArr = [
+            0 => '未认证',
+            1 => '待审核',
+            2 => '实名认证',
+        ];
+        $statusArr = [
+            0 => '正常',
+            1 => '删除',
+            2 => '冻结',
+        ];    
+        foreach ($list->items() as $k => &$v) {
+            $v['avatar'] = $this->view->config['upload']['cdnurl'] . $v['avatar'];
+            $v['is_real'] = $isRealArr[$v['is_real']] ?? "";
+//            $v['video_url'] = $this->view->config['upload']['cdnurl'] . $v['video_url'];
+            $v['status_name'] = $statusArr[$v['account_type']] ?? "";
+            $payM = new \app\admin\model\Pay();
+            $v['rechargeAllMoney'] = $payM
+                ->where("uid", $v['uid'])
+                ->where("type", 2)
+                ->sum("money");
+           // $v['is_self'] = $v['is_business'];
+        }
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
+    }
+public function team()
+    {      
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            return $this->view->fetch();
+        }
+        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+        $list = $this->model
+            ->where($where)
+            ->whereIn("account_type", [0, 2])
+            ->order($sort, $order)
+            ->paginate($limit);
+        $isRealArr = [
+            0 => '未认证',
+            1 => '待审核',
+            2 => '实名认证',
+        ];
+        $statusArr = [
+            0 => '正常',
+            1 => '删除',
+            2 => '冻结',
+        ];    
+        foreach ($list->items() as $k => &$v) {
+            $v['avatar'] = $this->view->config['upload']['cdnurl'] . $v['avatar'];
+            $v['is_real'] = $isRealArr[$v['is_real']] ?? "";
+//            $v['video_url'] = $this->view->config['upload']['cdnurl'] . $v['video_url'];
+            $v['status_name'] = $statusArr[$v['account_type']] ?? "";
+            $payM = new \app\admin\model\Pay();
+            $v['rechargeAllMoney'] = $payM
+                ->where("uid", $v['uid'])
+                ->where("type", 2)
+                ->sum("money");
+           // $v['is_self'] = $v['is_business'];
+        }
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
+    }
 
 
     public function export()

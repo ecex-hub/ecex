@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export const userApi = {
   // 登录
-  login(data) {
+  login (data) {
     return request({
       url: '/login/index',
       method: 'post',
@@ -14,7 +14,7 @@ export const userApi = {
   },
 
   // 注册
-  register(data) {
+  register (data) {
     return request({
       url: '/register/index',
       method: 'post',
@@ -23,7 +23,7 @@ export const userApi = {
   },
 
   // 发送注册验证码
-  sendRegisterCode(data) {
+  sendRegisterCode (data) {
     return request({
       url: '/register/code',
       method: 'post',
@@ -32,7 +32,7 @@ export const userApi = {
   },
 
   // 获取用户信息
-  getUserInfo() {
+  getUserInfo () {
     return request({
       url: '/user/info',
       method: 'get'
@@ -40,7 +40,7 @@ export const userApi = {
   },
 
   // 修改密码
-  changePassword(data) {
+  changePassword (data) {
     return request({
       url: '/user/password',
       method: 'put',
@@ -49,7 +49,7 @@ export const userApi = {
   },
 
   // 退出登录
-  logout() {
+  logout () {
     return request({
       url: '/user/logout',
       method: 'post'
@@ -62,7 +62,7 @@ export const userApi = {
  */
 export const authApi = {
   // 身份认证
-  identityAuth(data) {
+  identityAuth (data) {
     return request({
       url: '/auth/identity',
       method: 'post',
@@ -71,7 +71,7 @@ export const authApi = {
   },
 
   // 实名认证
-  realnameAuth(data) {
+  realnameAuth (data) {
     return request({
       url: '/auth/realname',
       method: 'post',
@@ -80,7 +80,7 @@ export const authApi = {
   },
 
   // 获取认证状态
-  getAuthStatus() {
+  getAuthStatus () {
     return request({
       url: '/auth/status',
       method: 'get'
@@ -93,7 +93,7 @@ export const authApi = {
  */
 export const walletApi = {
   // 获取钱包信息
-  getWalletInfo() {
+  getWalletInfo () {
     return request({
       url: '/wallet/info',
       method: 'get'
@@ -101,7 +101,7 @@ export const walletApi = {
   },
 
   // 充值
-  recharge(data) {
+  recharge (data) {
     return request({
       url: '/wallet/recharge',
       method: 'post',
@@ -110,7 +110,7 @@ export const walletApi = {
   },
 
   // 获取支付通道列表
-  getPaymentChannels(data) {
+  getPaymentChannels (data) {
     return request({
       url: '/wallet/payment-channels',
       method: 'post',
@@ -119,7 +119,7 @@ export const walletApi = {
   },
 
   // 提现
-  withdraw(data) {
+  withdraw (data) {
     return request({
       url: '/wallet/withdraw',
       method: 'post',
@@ -128,7 +128,7 @@ export const walletApi = {
   },
 
   // 资金明细
-  getTransactionList(params) {
+  getTransactionList (params) {
     return request({
       url: '/wallet/transactions',
       method: 'get',
@@ -143,7 +143,7 @@ export const walletApi = {
  */
 export const paymentAccountApi = {
   // 获取收款账户列表
-  getAccountList(params) {
+  getAccountList (params) {
     return request({
       url: '/payment-accounts/list',
       method: 'get',
@@ -152,7 +152,7 @@ export const paymentAccountApi = {
   },
 
   // 删除收款账户
-  deleteAccount(id) {
+  deleteAccount (id) {
     return request({
       url: '/payment-accounts/delete',
       method: 'post',
@@ -166,7 +166,7 @@ export const paymentAccountApi = {
  */
 export const teamApi = {
   // 获取团队统计
-  getTeamStats() {
+  getTeamStats () {
     return request({
       url: '/team/stats',
       method: 'get'
@@ -174,7 +174,7 @@ export const teamApi = {
   },
 
   // 获取团队成员列表
-  getTeamList(params) {
+  getTeamList (params) {
     return request({
       url: '/team/list',
       method: 'get',
@@ -188,7 +188,7 @@ export const teamApi = {
  */
 export const mallApi = {
   // 获取积分信息
-  getPointsInfo() {
+  getPointsInfo () {
     return request({
       url: '/mall/points',
       method: 'get'
@@ -196,7 +196,7 @@ export const mallApi = {
   },
 
   // 获取商品列表
-  getProductList(params) {
+  getProductList (params) {
     return request({
       url: '/mall/products',
       method: 'get',
@@ -205,7 +205,7 @@ export const mallApi = {
   },
 
   // 兑换商品
-  exchangeProduct(data) {
+  exchangeProduct (data) {
     return request({
       url: '/mall/exchange',
       method: 'post',
@@ -219,7 +219,7 @@ export const mallApi = {
  */
 export const signApi = {
   // 获取签到详情
-  getSignDetail(data) {
+  getSignDetail (data) {
     return request({
       url: '/sign-in/detail',
       method: 'post',
@@ -228,7 +228,7 @@ export const signApi = {
   },
 
   // 执行签到
-  receive() {
+  receive () {
     return request({
       url: '/sign-in/receive',
       method: 'post'
@@ -241,7 +241,7 @@ export const signApi = {
  */
 export const helpApi = {
   // 提交资料信息管理表单
-  submitDataManagement(data) {
+  submitDataManagement (data) {
     return request({
       url: '/help/data-management',
       method: 'post',
@@ -250,7 +250,7 @@ export const helpApi = {
   },
 
   // 获取最近一次提交的资料信息，用于页面回显
-  getLatestDataManagement() {
+  getLatestDataManagement () {
     return request({
       url: '/help/data-management-latest',
       method: 'get'
@@ -263,7 +263,7 @@ export const helpApi = {
  */
 export const newsApi = {
   // 获取新闻列表
-  getNewsList(params) {
+  getNewsList (params) {
     return request({
       url: '/news/list',
       method: 'get',
@@ -272,7 +272,7 @@ export const newsApi = {
   },
 
   // 获取新闻详情
-  getNewsDetail(id) {
+  getNewsDetail (id) {
     return request({
       url: `/news/${id}`,
       method: 'get'
@@ -281,14 +281,52 @@ export const newsApi = {
 }
 
 /**
+ * 首页相关 API
+ */
+export const homeApi = {
+  // 获取首页所有数据（包括轮播图、新闻等）
+  getIndexData () {
+    return request({
+      url: '/home/index',
+      method: 'get'
+    })
+  }
+}
+
+/**
+ * 视频相关 API
+ */
+export const videoApi = {
+  // 获取视频列表
+  getVideoList (params) {
+    return request({
+      url: '/home/video',
+      method: 'get',
+      params
+    })
+  },
+  // 获取视频详情
+  getVideoDetail (id) {
+    return request({
+      url: '/home/video-detail',
+      method: 'get',
+      params: { id }
+    })
+  }
+
+}
+
+
+
+/**
  * 文件上传 API
  */
 export const uploadApi = {
   // 上传文件
-  uploadFile(file, onProgress) {
+  uploadFile (file, onProgress) {
     const formData = new FormData()
     formData.append('file', file)
-    
+
     return request({
       url: '/upload/file',
       method: 'post',

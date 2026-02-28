@@ -14,7 +14,9 @@ import {
   Radio,
   RadioGroup,
   Popup,
-  Tag
+  Tag,
+  Swipe,
+  SwipeItem
 } from 'vant'
 import 'vant/lib/index.css'
 import './styles/main.css'
@@ -36,5 +38,7 @@ app.use(Radio)
 app.use(RadioGroup)
 app.use(Popup)
 app.use(Tag)
+app.use(Swipe)
+app.use(SwipeItem)
 
 app.mount('#app')

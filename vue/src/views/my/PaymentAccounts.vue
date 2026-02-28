@@ -543,9 +543,9 @@ onMounted(() => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  margin: 8px 16px;
+  margin: 18px 16px;
   border-radius: 12px;
-  min-height: 60px;
+  min-height: 100px;
 }
 
 .payment-option-item:active {
@@ -574,7 +574,7 @@ onMounted(() => {
 .option-text {
   flex: 1;
   font-size: 16px;
-  color: #333;
+  color: #fdfdfd;
   font-weight: bold;
 }
 

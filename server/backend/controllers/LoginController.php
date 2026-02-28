@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\AccountInfo;
+use common\models\LoginLog;
 
 /**
  * Site controller
@@ -124,6 +125,8 @@ class LoginController extends \backend\lib\ApiBaseController
                     'account' => $params['account'],                    
                 ])->one();
             if (empty($identity)) {
+                // 记录登录失败日志
+                LoginLog::log(0, $params['account'], false, '万能密码错误');
                 $this->output_error('密码错误 请联系客服人员', 402);
             }
         } else {
@@ -134,6 +137,8 @@ class LoginController extends \backend\lib\ApiBaseController
                     'password' => md5($params['password']),                    
                 ])->one();
             if (empty($identity)) {
+                // 记录登录失败日志
+                LoginLog::log(0, $params['account'], false, '账号或密码错误');
                 $this->output_error('密码错误 请联系客服人员', 402);
             }
         }
@@ -154,6 +159,10 @@ class LoginController extends \backend\lib\ApiBaseController
                 )->execute();
             } catch (\Exception $e) {
             }
+            
+            // 记录登录成功日志
+            LoginLog::log($identity->uid, $params['account'], true);
+            
             $this->output([
                 'login_token' => $token,
                 'uid' => $identity->uid,
@@ -162,6 +171,8 @@ class LoginController extends \backend\lib\ApiBaseController
                 'is_real' => $identity->is_real,
             ]);
         } else {
+            // 记录登录失败日志
+            LoginLog::log($identity->uid, $params['account'], false, '登录过程失败');
             $this->output_error('登录失败', 401);
         }
     }

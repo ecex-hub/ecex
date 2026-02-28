@@ -48,10 +48,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: 'LIKE',
                                 formatter: Controller.api.formatter.video
                             },
-                            // {field: 'video_duration', title: __('Video_duration')},
+                            {field: 'video_duration', title: __('Video_duration')},
                             // {field: 'type', title: __('Type')},
-                            {field: 'is_hot', title: __('Is_hot')},
-                            {field: 'is_new', title: __('Is_new')},
+                        
                             {field: 'sort', title: __('Sort')},
                             {
                                 field: 'itime',

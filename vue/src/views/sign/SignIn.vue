@@ -185,11 +185,21 @@ const handleSignIn = async () => {
   }
 
   try {
-    await signApi.receive()
-    showToast.success('签到成功！获得积分50+基金补贴10000')
-    await loadSignDetail()
+    console.log('开始签到请求...')
+    const res = await signApi.receive()
+    console.log('签到响应:', res)
+    
+    // 检查响应是否成功（code为200或0表示成功）
+    if (res && (res.code === 200 || res.code === 0)) {
+      showToast('签到成功！获得积分50+基金补贴10000')
+      await loadSignDetail()
+    } else {
+      console.warn('签到响应异常:', res)
+      showToast(res?.message || '签到失败，请稍后重试')
+    }
   } catch (error) {
-    showToast('签到失败，请稍后重试')
+    console.error('签到请求失败:', error)
+    showToast(error.message || '签到失败，请稍后重试')
   }
 }
 

@@ -28,3 +28,13 @@ caddy-config/
 *.log
 logs/
 
+# Zip files
+*.zip
+
+# IDE history
+.history/
+server/.history/
+
+# Runtime debug data
+server/backend/runtime/debug/
+

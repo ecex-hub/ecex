@@ -1,0 +1,175 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-name" data-rule="required" class="form-control" name="row[name]" type="text">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="c-local" class="control-label col-xs-12 col-sm-2">{:__('image')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input type="text" name="row[image]" id="c-local" class="form-control" />
+      <ul class="row list-inline faupload-preview" id="p-local"></ul>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="c-local" class="control-label col-xs-12 col-sm-2"></label>
+    <div class="col-xs-12 col-sm-8">
+      <button type="button" id="faupload-local" class="btn btn-primary faupload" data-input-id="c-local"
+        data-multiple="true" data-preview-id="p-local" data-url="{:url('ajax/upload')}"><i class="fa fa-upload"></i>
+        上传图片
+      </button>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Price')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-price" data-rule="required" class="form-control" step="1" name="row[price]" type="number">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">产品类型</label>
+    <input class="form-check-input" type="radio" name="row[product_type]" value="1" id="product_type_1" checked>
+    <label class="form-check-label" for="product_type_1">
+      Ⅰ型产品（日返机制）
+    </label>
+    <input class="form-check-input" type="radio" name="row[product_type]" value="2" id="product_type_2">
+    <label class="form-check-label" for="product_type_2">
+      Ⅴ型产品（固定周期多次返利）
+    </label>
+    <input class="form-check-input" type="radio" name="row[product_type]" value="3" id="product_type_3">
+    <label class="form-check-label" for="product_type_3">
+      Ⅵ型产品（多日期多阶段返利）
+    </label>
+    <input class="form-check-input" type="radio" name="row[product_type]" value="4" id="product_type_4">
+    <label class="form-check-label" for="product_type_4">
+      Ⅳ型产品（阶段日返产品）
+    </label>
+  </div>
+  <div class="form-group" id="day">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Day')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-day" class="form-control" name="row[day]" type="number" value="0">
+    </div>
+  </div>
+  <div class="form-group" id="day_income">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Day_income')}(%):</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-day_income" data-rule="" class="form-control" name="row[day_income]" type="number">
+    </div>
+  </div>
+
+  <!-- 
+  <div class="form-group" id="allowance">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Allowance')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-allowance" data-rule="" class="form-control" name="row[allowance]" type="number">
+    </div>
+  </div>
+ -->
+  <div class="form-group" id="month_income">
+    <label class="control-label col-xs-12 col-sm-2">每月补助:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-month_income" data-rule="" class="form-control" step="0.01" name="row[month_income]" type="number">
+    </div>
+  </div>
+
+  <div class="form-group" id="month">
+    <label class="control-label col-xs-12 col-sm-2">发放周期(月):</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-month" data-rule="" class="form-control" name="row[month]" type="number">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Remark')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <textarea id="c-remark" class="form-control " rows="5" name="row[remark]" cols="50"></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Limit_num')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-limit_num" class="form-control " rows="5" name="row[limit_num]"></input>
+    </div>
+  </div>
+  <!--
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Is_hot')}:</label>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="row[is_hot]" value="0" checked>
+      <label class="form-check-label">
+        否
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="row[is_hot]" value="1">
+      <label class="form-check-label">
+        是
+      </label>
+    </div>
+  </div>
+  -->
+
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Sort')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-sort" class="form-control" name="row[sort]" type="number" value="0">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Itime')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-itime" data-rule="required" class="form-control datetimepicker"
+        data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[itime]" type="text"
+        value="{:date('Y-m-d H:i:s')}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">{:__('Utime')}:</label>
+    <div class="col-xs-12 col-sm-8">
+      <input id="c-utime" data-rule="required" class="form-control datetimepicker"
+        data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[utime]" type="text"
+        value="{:date('Y-m-d H:i:s')}">
+    </div>
+  </div>
+  <div class="form-group layer-footer">
+    <label class="control-label col-xs-12 col-sm-2"></label>
+    <div class="col-xs-12 col-sm-8">
+      <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+    </div>
+  </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    function toggleUrlField () {
+      if ($("input[name='row[product_type]']:checked").val() == "1") {
+        $("#month_income").hide();
+        $("#month").hide();
+
+        $("#day").show();
+        $("#day_income").show();
+        $("#allowance").show();
+      }
+      if ($("input[name='row[product_type]']:checked").val() == "2") {
+        $("#month_income").show();
+        $("#month").show();
+
+        $("#day").hide();
+        $("#day_income").hide();
+        $("#allowance").hide();
+      }
+    }
+
+    // Initially check if the radio is set to "内部新闻", then hide the URL field
+    toggleUrlField();
+
+    // Listen for changes on the radio buttons
+    $("input[name='row[product_type]']").change(function () {
+      toggleUrlField();
+    });
+  });
+
+</script>

@@ -2,8 +2,8 @@
 
 return [
     'redis.prefix' => 'dev-stock',
-    'cdn_url' => 'https://ecex.cc/api',
-    'base_url' => 'https://ecex.cc/api',
-    'return_url' => 'https://ecex.cc/',
-    'return_url_app' => 'https://ecex.cc/'
+    'cdn_url' => 'http://192.168.30.119:8199',
+    'base_url' => 'http://192.168.30.119:8199',
+    'return_url' => 'http://192.168.30.119:8199',
+    'return_url_app' => 'http://192.168.30.119:8199'
 ];

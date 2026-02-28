@@ -37,20 +37,10 @@ class SendSMS extends BaseModel {
     // fixme 必填：是否启用https
     private $security = false;
     // fixme 必填: 请参阅 https://ak-console.aliyun.com/ 取得您的AK信息
-    // 从环境变量读取，避免泄露密钥
     private $accessKeyId = "";
     private $accessKeySecret = "";
-    private $SignName = '';
-    private $TemplateCode = '';
-
-    public function init()
-    {
-        parent::init();
-        $this->accessKeyId = getenv('SMS_ACCESS_KEY_ID') ?: '';
-        $this->accessKeySecret = getenv('SMS_ACCESS_KEY_SECRET') ?: '';
-        $this->SignName = getenv('SMS_SIGN_NAME') ?: '';
-        $this->TemplateCode = getenv('SMS_TEMPLATE_CODE') ?: '';
-    }
+    private $SignName = '添微科技';
+    private $TemplateCode = 'SMS_217840103';
     private static $key = [];
 
     public static function selectColumn() {
@@ -61,9 +51,9 @@ class SendSMS extends BaseModel {
 
         $security = $this->security;
 
-        // fixme 必填: 请参阅 https://ak-console.aliyun.com/ 取得您的AK信息
-        $accessKeyId = $this->accessKeyId;
-        $accessKeySecret = $this->accessKeySecret;
+        // 优先从环境变量读取，否则使用属性值
+        $accessKeyId = getenv('ALIYUN_SMS_ACCESS_KEY_ID') ?: $this->accessKeyId;
+        $accessKeySecret = getenv('ALIYUN_SMS_ACCESS_KEY_SECRET') ?: $this->accessKeySecret;
 
         // fixme 必填: 短信接收号码
         $params["PhoneNumbers"] = $phone;

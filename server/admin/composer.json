@@ -19,7 +19,7 @@
         "topthink/framework": "dev-master",
         "topthink/think-captcha": "^1.0.9",
         "topthink/think-installer": "^1.0.14",
-        "topthink/think-queue": "1.1.6",
+        "topthink/think-queue": "^2.0",
         "topthink/think-helper": "^1.0.7",
         "karsonzhang/fastadmin-addons": "~1.4.0",
         "overtrue/pinyin": "^3.0",
@@ -32,7 +32,8 @@
         "txthinking/mailer": "^2.0",
         "zoujingli/wechat-developer": "^1.2",
         "mk-j/php_xlsxwriter": "^0.39.0",
-        "predis/predis": "^2.3"
+        "predis/predis": "^2.3",
+        "james-heinrich/getid3": "^1.9"
     },
     "config": {
         "preferred-install": "dist",

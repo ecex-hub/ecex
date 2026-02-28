@@ -90,6 +90,16 @@ const routes = [
     component: () => import('../views/News.vue')
   },
   {
+    path: '/news/detail/:id',
+    name: 'NewsDetail',
+    component: () => import('../views/news/NewsDetail.vue')
+  },
+  {
+    path: '/news/video/:id',
+    name: 'VideoPlayer',
+    component: () => import('../views/news/VideoPlayer.vue')
+  },
+  {
     path: '/help/data-management',
     name: 'DataManagement',
     component: () => import('../views/help/DataManagement.vue')

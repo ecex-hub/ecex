@@ -146,6 +146,8 @@ class Video extends BaseModel
         ];
         $list = $this->listFind(['page' => $page, 'row' => $limit])
             ->orderBy(['sort' => SORT_DESC])
+            ->orderBy(['itime' => SORT_DESC])
+            ->orderBy(['id' => SORT_DESC])
             ->where($where)->asArray()->all();
         return $list;
     }

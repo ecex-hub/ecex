@@ -11,7 +11,7 @@ use think\response\Json;
  *
  * @icon fa fa-circle-o
  */
-class UserProduct extends Backend
+class Userproduct extends Backend
 {
 
     /**
@@ -36,6 +36,30 @@ class UserProduct extends Backend
      * @throws DbException
      */
     public function index()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            return $this->view->fetch();
+        }
+        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+        $list = $this->model
+            ->where($where)
+            ->with(["user"])
+            ->order($sort, $order)
+            ->paginate($limit);
+
+        foreach ($list->items() as $k => &$v) {
+            $v['nickname'] = $v['user']['nickname'] ?? "";
+        }
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
+    }
+public function tongji()
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);

@@ -6,51 +6,32 @@
             <input id="c-title" data-rule="required" class="form-control" name="row[title]" type="text"
                    value="{$row.title|htmlentities}">
         </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">副标题:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-subtitle" data-rule="required" class="form-control" name="row[subtitle]" type="text"
-                   value="{$row.subtitle|htmlentities}">
-        </div>
-    </div>
+    </div> 
 
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Author')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-author" data-rule="required" class="form-control" name="row[author]" type="text"
-                   value="{$row.author|htmlentities}">
-        </div>
-    </div>
+    
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">新闻类型:</label>
-        <input class="form-check-input" type="radio" name="row[new_type]" value="1"
-               {if $row.new_type== 1} checked="checked" {/if}>
+        <input class="form-check-input" type="radio" name="row[type]" value="1"
+               {if isset($row.type) && $row.type== 1} checked="checked" {/if}>
 
         <label class="form-check-label">
             内部新闻
         </label>
-        <input class="form-check-input" type="radio" name="row[new_type]" value="2"
-               {if $row.new_type== 2} checked="checked" {/if}>
+        <input class="form-check-input" type="radio" name="row[type]" value="2"
+               {if isset($row.type) && $row.type== 2} checked="checked" {/if}>
 
         <label class="form-check-label">
             外部新闻
         </label>
-    </div>
-    <div class="form-group" id="is-new-id">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Is_new')}:</label>
-        <input class="form-check-input" type="radio" name="row[is_new]" value="0"
-               {if $row.is_new== 0} checked="checked" {/if}>
+
+        <input class="form-check-input" type="radio" name="row[type]" value="3"
+               {if isset($row.type) && $row.type== 3} checked="checked" {/if}>
+
         <label class="form-check-label">
-            否
-        </label>
-        <input class="form-check-input" type="radio" name="row[is_new]" value="1"
-               {if $row.is_new== 1} checked="checked" {/if}
-        >
-        <label class="form-check-label">
-            是
+            纯图新闻
         </label>
     </div>
+
     <div class="form-group">
         <label for="c-local" class="control-label col-xs-12 col-sm-2">封面:</label>
         <div class="col-xs-12 col-sm-8">
@@ -72,7 +53,7 @@
     <div class="form-group" id="url-id">
         <label class="control-label col-xs-12 col-sm-2">跳转链接:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-url" data-rule="" class="form-control" name="row[url]" type="text">
+            <input id="c-url" data-rule="" class="form-control" name="row[url]" type="text" value="{$row.url|htmlentities|default=''}">
         </div>
     </div>
 
@@ -103,20 +84,20 @@
 <script>
     $(document).ready(function () {
         function toggleUrlField() {
-            if ($("input[name='row[new_type]']:checked").val() == "1") {
+            if ($("input[name='row[type]']:checked").val() == "1" || $("input[name='row[type]']:checked").val() == "3") {
                 $("#url-id").hide();
             } else {
                 // Show the URL input field when "外部新闻" is selected
                 $("#url-id").show();
             }
 
-            if ($("input[name='row[new_type]']:checked").val() == "2") {
-                $("#is-new-id").hide();
+            if ($("input[name='row[type]']:checked").val() == "2") {
+            
                 $("#itime-id").hide();
 
             } else {
                 // Show the URL input field when "外部新闻" is selected
-                $("#is-new-id").show();
+              
                 $("#itime-id").show();
 
             }
@@ -126,7 +107,7 @@
         toggleUrlField();
 
         // Listen for changes on the radio buttons
-        $("input[name='row[new_type]']").change(function () {
+        $("input[name='row[type]']").change(function () {
             toggleUrlField();
         });
 

@@ -50,8 +50,10 @@ class Product extends Backend
             2 => '删除'
         ];
         $productTypeArr = [
-            1 => '收益',
-            2 => '补助',
+            1 => 'Ⅰ型产品（日返机制)',
+            2 => 'Ⅴ型产品（固定周期多次返利）',
+            3 => 'Ⅵ型产品（多日期多阶段返利）',
+            4 => 'Ⅳ型产品（阶段日返产品）'
         ];
         foreach ($list->items() as $k => &$v) {
             $v['type'] = $typeArr[$v['type']] ?? "";
@@ -69,6 +71,47 @@ class Product extends Backend
     }
 
 
+    public function tongji()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            return $this->view->fetch();
+        }
+        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+        $list = $this->model
+            ->where($where)
+            ->where('type', 1)
+            ->order($sort, $order)
+            ->paginate($limit);
+        $typeArr = [
+            1 => '是',
+            2 => '删除'
+        ];
+        $productTypeArr = [
+            1 => 'Ⅰ型产品（日返机制)',
+            2 => 'Ⅴ型产品（固定周期多次返利）',
+            3 => 'Ⅵ型产品（多日期多阶段返利）',
+            4 => 'Ⅳ型产品（阶段日返产品）'
+        ];
+        foreach ($list->items() as $k => &$v) {
+            $v['type'] = $typeArr[$v['type']] ?? "";
+            if ($v['is_hot']) {
+                $v['is_hot'] = '是';
+            } else {
+                $v['is_hot'] = '否';
+            }
+            $v['day_income'] = $v['day_income'] . "%";
+            $v['image'] = $this->view->config['upload']['cdnurl'] . $v['image'];
+            $v['product_type_name'] = $productTypeArr[$v['product_type']] ?? "";
+        }
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
+    }
     public function edit($ids = null)
     {
         $row = $this->model->get($ids);

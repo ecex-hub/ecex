@@ -1,54 +1,41 @@
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">显示位置:</label>
+        <input class="form-check-input" type="radio" name="row[display_position]" value="1" checked>
+        <label class="form-check-label">
+            首页
+        </label>
+        <input class="form-check-input" type="radio" name="row[display_position]" value="2">
+        <label class="form-check-label">
+            平台资讯
+        </label>
+        <input class="form-check-input" type="radio" name="row[display_position]" value="3">
+        <label class="form-check-label">
+            宣传栏目
+        </label>
+    </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Title')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-title" data-rule="required" class="form-control" name="row[title]" type="text">
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="subtitle-id">
         <label class="control-label col-xs-12 col-sm-2">副标题:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-subtitle" data-rule="required" class="form-control" name="row[subtitle]" type="text">
+            <input id="c-subtitle" data-rule="" class="form-control" name="row[subtitle]" type="text">
         </div>
     </div>
+    <!-- 作者 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Author')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-author" data-rule="required" class="form-control" name="row[author]" type="text">
         </div>
     </div>
+    -->
 
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">新闻类型:</label>
-        <input class="form-check-input" type="radio" name="row[new_type]" value="1" checked>
-        <label class="form-check-label">
-            内部新闻
-        </label>
-        <input class="form-check-input" type="radio" name="row[new_type]" value="2">
-        <label class="form-check-label">
-            外部新闻
-        </label>
-    </div>
 
-    <div class="form-group" id="url-id">
-        <label class="control-label col-xs-12 col-sm-2">跳转链接:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-url" data-rule="" class="form-control" name="row[url]" type="text">
-        </div>
-    </div>
-
-    <div class="form-group" id="is-new-id">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Is_new')}:</label>
-        <input class="form-check-input" type="radio" name="row[is_new]" value="0" checked>
-        <label class="form-check-label">
-            否
-        </label>
-        <input class="form-check-input" type="radio" name="row[is_new]" value="1">
-        <label class="form-check-label">
-            是
-        </label>
-    </div>
     <div class="form-group">
         <label for="c-local" class="control-label col-xs-12 col-sm-2">封面:</label>
         <div class="col-xs-12 col-sm-8">
@@ -63,9 +50,49 @@
                     data-multiple="true" data-preview-id="p-local" data-url="{:url('ajax/upload')}"><i
                     class="fa fa-upload"></i> 上传图片
             </button>
+            <small class="help-block" style="margin-top: 5px; color: #999;">建议尺寸为220*160</small>
         </div>
     </div>
+    
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">新闻类型:</label>
+        <input class="form-check-input" type="radio" id="c-type-1" name="row[type]" value="1" checked>
+        <label class="form-check-label" for="c-type-1">
+            内部新闻
+        </label>
+        <input class="form-check-input" type="radio" id="c-type-2" name="row[type]" value="2">
+        <label class="form-check-label" for="c-type-2">
+            外部新闻
+        </label>
+        <input class="form-check-input" type="radio" id="c-type-3" name="row[type]" value="3">
+        <label class="form-check-label" for="c-type-3">
+            纯图新闻
+        </label>
+    </div>
+
+    <div class="form-group" id="url-id">
+        <label class="control-label col-xs-12 col-sm-2">跳转链接:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-url" data-rule="" class="form-control" name="row[url]" type="text">
+        </div>
+    </div>
+
+    <!-- 
+    <div class="form-group" id="is-new-id">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Is_new')}:</label>
+        <input class="form-check-input" type="radio" name="row[is_new]" value="0" checked>
+        <label class="form-check-label">
+            否
+        </label>
+        <input class="form-check-input" type="radio" name="row[is_new]" value="1">
+        <label class="form-check-label">
+            是
+        </label>
+    </div>
+-->
+
+    
+    <div class="form-group" id="content-id">
         <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
         <div class="col-xs-12 col-sm-8">
             <textarea id="c-content" data-rule="" class="form-control editor" rows="5" name="row[content]"
@@ -90,32 +117,55 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // 配置表单验证器，忽略隐藏字段
+        $("form#add-form").data("validator-options", {
+            ignore: ':hidden'
+        });
+
         function toggleUrlField() {
-            if ($("input[name='row[new_type]']:checked").val() == "1") {
+            if ($("input[name='row[type]']:checked").val() == "1" || $("input[name='row[type]']:checked").val() == "3") {
                 $("#url-id").hide();
             } else {
                 // Show the URL input field when "外部新闻" is selected
                 $("#url-id").show();
             }
 
-            if ($("input[name='row[new_type]']:checked").val() == "2") {
+            if ($("input[name='row[type]']:checked").val() == "2") {
                 $("#is-new-id").hide();
-                $("#itime-id").hide();
-
+                //$("#itime-id").hide();
+                $("#content-id").hide();
             } else {
                 // Show the URL input field when "外部新闻" is selected
                 $("#is-new-id").show();
-                $("#itime-id").show();
-
+               // $("#itime-id").show();
+                $("#content-id").show();
             }
+        }
+
+        function toggleSubtitleField() {
+            // 如果选择了"平台资讯"（value="2"），则隐藏副标题字段
+            if ($("input[name='row[display_position]']:checked").val() == "2") {
+                $("#subtitle-id").hide();
+            } else {
+                $("#subtitle-id").show();
+            }
+            //暂时改为完全隐藏副标题
+            $("#subtitle-id").hide();
         }
 
         // Initially check if the radio is set to "内部新闻", then hide the URL field
         toggleUrlField();
+        // Initially check display_position and toggle subtitle field
+        toggleSubtitleField();
 
         // Listen for changes on the radio buttons
-        $("input[name='row[new_type]']").change(function () {
+        $("input[name='row[type]']").change(function () {
             toggleUrlField();
+        });
+
+        // Listen for changes on display_position radio buttons
+        $("input[name='row[display_position]']").change(function () {
+            toggleSubtitleField();
         });
 
 

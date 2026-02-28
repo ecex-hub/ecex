@@ -4,7 +4,7 @@ return [
     'Id' => '标记id',
     'Uid' => '用户id',
     'Nickname' => '用户名',
-    'Otn' => '订单号',
+    'Otn' => '充值单号',
     'Money' => '充值金额',
     'Pay_type' => '支付渠道',
     'Sys_id' => '支付ID',

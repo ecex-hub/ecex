@@ -50,5 +50,55 @@ class BaseModel extends ActiveRecord
         }
     }
 
+    /**
+     * Redis 缓存时间（秒）
+     * @var int
+     */
+    public $redisTime = 3600;
+
+    /**
+     * 获取 Redis 缓存
+     * @param string $key 缓存键
+     * @return mixed 缓存值或 null
+     */
+    public function getRedisCacheOperation($key)
+    {
+        try {
+            $redis = \Yii::$app->redis;
+            if ($redis) {
+                $data = $redis->get($key);
+                return $data ? json_decode($data, true) : null;
+            }
+        } catch (\Exception $e) {
+            \Yii::error('Redis get error: ' . $e->getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * 设置 Redis 缓存
+     * @param string $key 缓存键
+     * @param mixed $value 缓存值
+     * @param int $expire 过期时间（秒）
+     * @return bool 操作是否成功
+     */
+    public static function redisCacheOperation($key, $value, $expire = 3600)
+    {
+        try {
+            $redis = \Yii::$app->redis;
+            if ($redis) {
+                $data = json_encode($value);
+                if ($expire > 0) {
+                    return $redis->setex($key, $expire, $data);
+                } else {
+                    return $redis->set($key, $data);
+                }
+            }
+        } catch (\Exception $e) {
+            \Yii::error('Redis set error: ' . $e->getMessage());
+        }
+        return false;
+    }
+
 
 }

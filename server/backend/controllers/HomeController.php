@@ -22,7 +22,7 @@ class HomeController extends \backend\lib\ApiBaseController
         $behaviors = parent::behaviors();
 
         // 配置不需要鉴权的动作
-        $behaviors['authenticator']['except'] = ['video'];
+        $behaviors['authenticator']['except'] = ['video', 'video-detail'];
 
         return $behaviors;
     }
@@ -169,7 +169,7 @@ class HomeController extends \backend\lib\ApiBaseController
         $model = new Carousel();
         $carousel = $model->getClientCarouselsList();
         foreach ($carousel as &$value) {
-            $value['picUrl'] = FuncHelper::getCdnUrl($value['picUrl']);
+            $value['picUrl'] = FuncHelper::processImageUrl($value['picUrl']);
         }
 
         //公告提醒
@@ -179,14 +179,14 @@ class HomeController extends \backend\lib\ApiBaseController
         $model = new News();
         $news = $model->getClientNewsList(1, 3);
         foreach ($news as &$value) {
-            $value['coverUrl'] = FuncHelper::getCdnUrl($value['coverUrl']);
+            $value['coverUrl'] = FuncHelper::processImageUrl($value['coverUrl']);
         }
         //视频
         $model = new Video();
         $video = $model->getClientNewsList(1, 3);
         foreach ($video as &$value) {
-            $value['coverUrl'] = FuncHelper::getCdnUrl($value['coverUrl']);
-            $value['video_url'] = FuncHelper::getCdnUrl($value['video_url']);
+            $value['coverUrl'] = FuncHelper::processImageUrl($value['coverUrl']);
+            $value['video_url'] = FuncHelper::processImageUrl($value['video_url']);
         }
         $data = [
             'carousel' => $carousel,
@@ -442,16 +442,41 @@ class HomeController extends \backend\lib\ApiBaseController
         $params = $this->params([
             'page',
             'size',
-        ]);
-        //$uid = Yii::$app->user->identity->uid;
+        ]);      
         //视频
         $model = new Video();
-        $video = $model->getClientNewsList($params['page'], $params['size']);
-        foreach ($video as &$value) {
-            $value['coverUrl'] = FuncHelper::getCdnUrl($value['coverUrl']);
-            $value['video_url'] = FuncHelper::getCdnUrl($value['video_url']);
+        $video = $model->getClientNewsList($params['page'] ?? 1, $params['size'] ?? 10);
+        foreach ($video as &$value) {            
+            $value['coverUrl'] = FuncHelper::processImageUrl($value['coverUrl']);
+            // 将 video_url 改为 videoUrl，保持前端字段名一致
+            $value['videoUrl'] = FuncHelper::processImageUrl($value['video_url']);
+            unset($value['video_url']); // 移除旧的字段名
+            // 确保 video_duration 字段存在
+            if (!isset($value['video_duration'])) {
+                $value['video_duration'] = 0;
+            }
         }
         $this->output(['list' => $video]);
+    }
+
+    public function actionVideoDetail()
+    {
+        $id = $this->request->get('id');      
+        //视频
+        $model = new Video();
+        $video = $model->getClientNewsMessage($id);
+        
+        if (empty($video)) {
+            $this->output_error('视频不存在');
+            return;
+        }
+        
+        // 处理图片和视频 URL
+        $video['coverUrl'] = FuncHelper::processImageUrl($video['coverUrl']);
+        $video['videoUrl'] = FuncHelper::processImageUrl($video['video_url']);
+        unset($video['video_url']); // 移除旧的字段名
+        
+        $this->output(['data' => $video]);
     }
 
 }

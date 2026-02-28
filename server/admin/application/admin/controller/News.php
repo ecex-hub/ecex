@@ -50,25 +50,79 @@ class News extends Backend
         }
         [$where, $sort, $order, $offset, $limit] = $this->buildparams();
         $list = $this->model
-            ->where($where)
-            ->where("type", 1)
+            ->where($where)          
             ->order($sort, $order)
             ->paginate($limit);
-        $newTypeArr = [
-            1 => '内部新闻',
-            2 => '外部新闻'
-        ];
+      
         foreach ($list->items() as $k => &$v) {
-            $v['coverUrl'] = $this->view->config['upload']['cdnurl'] . $v['coverUrl'];
-            if ($v['is_new']) {
-                $v['is_new'] = '是';
-            } else {
-                $v['is_new'] = '否';
+            // 将模型对象转换为数组
+            if (is_object($v)) {
+                $v = $v->toArray();
             }
-            $v['new_type'] = $newTypeArr[$v['new_type']] ?? "";
+            // 安全处理 coverUrl
+            if (isset($v['coverUrl']) && !empty($v['coverUrl'])) {
+                $v['coverUrl'] = $this->view->config['upload']['cdnurl'] . $v['coverUrl'];
+            } else {
+                $v['coverUrl'] = '';
+            }
+       
         }
         $result = ['total' => $list->total(), 'rows' => $list->items()];
         return json($result);
+    }
+
+    /**
+     * 编辑
+     *
+     * @param $ids
+     * @return string
+     * @throws DbException
+     * @throws \think\Exception
+     */
+    public function edit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds) && !in_array($row[$this->dataLimitField], $adminIds)) {
+            $this->error(__('You have no permission'));
+        }
+        if (false === $this->request->isPost()) {
+            // 将模型对象转换为数组，避免访问未定义属性时报错
+            $rowData = is_object($row) ? $row->toArray() : $row;
+            // 确保 new_type 字段存在，如果不存在则设置默认值
+            if (!isset($rowData['new_type'])) {
+                $rowData['new_type'] = 1; // 默认为内部新闻
+            }
+            $this->view->assign('row', $rowData);
+            return $this->view->fetch();
+        }
+        $params = $this->request->post('row/a');
+        if (empty($params)) {
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $params = $this->preExcludeFields($params);
+        $result = false;
+        Db::startTrans();
+        try {
+            //是否采用模型验证
+            if ($this->modelValidate) {
+                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                $row->validateFailException()->validate($validate);
+            }
+            $result = $row->allowField(true)->save($params);
+            Db::commit();
+        } catch (\think\exception\ValidateException|PDOException|\Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
+        if (false === $result) {
+            $this->error(__('No rows were updated'));
+        }
+        $this->success();
     }
 
     /**

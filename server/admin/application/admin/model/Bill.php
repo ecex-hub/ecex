@@ -99,12 +99,14 @@ class Bill extends Model
     {
         return $this->belongsTo(
             'app\admin\model\Account', 'uid', 'uid', [], 'LEFT')
-            ->setEagerlyType(0);
+            ->field('uid,nickname,oneLevel')
+            ->setEagerlyType(1);
     }
     public function admin()
     {
         return $this->belongsTo(
             'app\admin\model\Admin', 'ext_id', 'id', [], 'LEFT')
+            ->field('id,nickname')
             ->setEagerlyType(0);
     }
 }

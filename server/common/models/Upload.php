@@ -52,7 +52,7 @@ class Upload extends BaseModel
             $this->addError('mesg', ['211', "上传资源最大限制为$maxsize" . 'KB']);
             return false;
         }
-        $uploadDir = Yii::getAlias('@webroot') . '/uploads/';
+        $uploadDir = Yii::getAlias('@app') . '/../stock_admin/public/uploads/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true); // 确保目录存在并设置权限
         }
