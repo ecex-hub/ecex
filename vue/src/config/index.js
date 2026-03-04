@@ -13,7 +13,7 @@ export const config = {
   
   // 应用配置
   app: {
-    name: '移动端应用',
+    name: '二重二新',
     version: '1.0.0'
   }
 }
@@ -22,7 +22,8 @@ export const config = {
 export const STORAGE_KEYS = {
   TOKEN: 'token',
   USER_INFO: 'userInfo',
-  THEME: 'theme'
+  THEME: 'theme',
+  HOME_INDEX_DATA: 'homeIndexData'
 }
 
 // 请求状态码

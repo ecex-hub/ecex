@@ -1,20 +1,18 @@
 <?php
 return [
-    'timeZone'=>'Asia/Shanghai',
+    'timeZone' => 'Asia/Shanghai',
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME'),
             'username' => getenv('DB_USER'),
             'password' => getenv('DB_PASSWORD'),
-            'charset' => 'utf8mb4',
         ],
         'stockData' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME'),
             'username' => getenv('DB_USER'),
             'password' => getenv('DB_PASSWORD'),
-            'charset' => 'utf8mb4',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -26,9 +24,9 @@ return [
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => getenv('REDIS_HOST') ?: 'redis',
-            'password' => getenv('REDIS_PASSWORD') ?: null,
-            'port' => (int)(getenv('REDIS_PORT') ?: 6379),
+            'hostname' => getenv('REDIS_HOST'),
+            'password' => getenv('REDIS_PASSWORD'),
+            'port' => 6379,
             'database' => 0,
         ],
     ],

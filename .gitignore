@@ -4,6 +4,9 @@ server/frontend/runtime/
 server/console/runtime/
 server/admin/runtime/
 
+# Vendor dependencies
+server/admin/vendor/
+
 # Environment files with real credentials
 deploy/backend/.env
 deploy/frontend/.env

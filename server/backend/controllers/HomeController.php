@@ -7,6 +7,7 @@ use common\models\Video;
 use common\models\News;
 use common\models\Carousel;
 use common\models\SystemConfigure;
+use common\models\Configure;
 use common\models\Notice;
 
 /**
@@ -193,7 +194,9 @@ class HomeController extends \backend\lib\ApiBaseController
             'notice' => $notice,
             'news' => $news,
             'video' => $video,
-            'customer_service' => SystemConfigure::getSystemConfigure(1), //客服地址
+            //'customer_service' => SystemConfigure::getSystemConfigure(1), //客服地址
+            'customer_service' => Configure::getConfigure('kefuurl'), //客服地址
+            'group_chat_qrcode' => Configure::getConfigure('groupqrcode'), //群聊图片
             'home_welfare_status' => SystemConfigure::getSystemConfigure(2),//首页福利弹窗开关
             'welfare_id' => SystemConfigure::getSystemConfigure(3),//福利跳转id
         ];

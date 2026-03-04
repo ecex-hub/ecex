@@ -89,6 +89,9 @@ class PointsGoods extends BaseModel
                 } else {
                     $row['image'] = $processedUrl;
                 }
+
+
+                $row['image'] = $imageUrl;
             }
             $row['points'] = intval($row['points'] ?? 0);
             $row['stock'] = intval($row['stock'] ?? 0);

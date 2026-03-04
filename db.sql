@@ -4832,6 +4832,7 @@ CREATE TABLE `t_news`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '标记id, 主键，自增字段',
   `display_position` int(4) NULL DEFAULT NULL COMMENT '1首页2平台资讯3宣传栏目',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题, 存储文章或内容的标题',
+  `subtitle` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '副标题',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '作者, 存储内容的作者',
   `coverUrl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '封面, 存储内容的封面图片URL, 默认为NULL',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '外部新闻连接',
@@ -4841,6 +4842,7 @@ CREATE TABLE `t_news`  (
   `utime` int(11) NOT NULL COMMENT '更新时间, 存储内容的最后更新时间 (Unix 时间戳)',
   `deletetime` int(11) NULL DEFAULT NULL COMMENT '删除',
   `is_new` int(11) NULL DEFAULT 0 COMMENT '1-最新',
+  `new_type` tinyint(1) NULL DEFAULT 1 COMMENT '新闻类型 1-内部 2-外部',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '新闻表' ROW_FORMAT = Dynamic;
 

@@ -13,7 +13,8 @@
 
     <!-- 内容区域 -->
     <div class="content">
-      <img :src="scan" alt="scan" class="scan-image" />
+      <!-- 群聊二维码（来自首页缓存 group_chat_qrcode），优先显示处理后的完整地址 -->
+      <img :src="groupChatQrUrl || scan" alt="group-chat-qrcode" class="scan-image" />
       <div class="cover-wrapper">
         <img :src="cover" alt="cover" class="cover-image" />
         <img :src="cover2" alt="cover2" class="cover2-image" />
@@ -29,12 +30,44 @@
 </template>
 
 <script setup>
+import { ref, onMounted, computed } from 'vue'
 import { showToast, showSuccessToast } from 'vant'
+import { config, STORAGE_KEYS } from '@/config'
 import back from '@/assets/icons/png/kf/back.png'
 import cover from '@/assets/icons/png/kf/cover.png'
 import cover2 from '@/assets/icons/png/kf/cover2.png'
 import scan from '@/assets/icons/png/kf/scan.png'
 import btnBack from '@/assets/icons/png/invite/btnback.png'
+
+// 群聊二维码图片地址（从 localStorage.homeIndexData.group_chat_qrcode 读取）
+const groupChatQr = ref('')
+
+// 处理为前端可访问的完整图片地址
+const groupChatQrUrl = computed(() => {
+  let url = groupChatQr.value
+  if (!url) return ''
+
+  if (url.startsWith('/')) {
+    // 相对路径（如 /uploads/xxx），拼接后端域名
+    url = config.baseURL.replace(/\/+$/, '') + url
+  } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    // 纯域名或其他，补全协议
+    url = 'https://' + url
+  }
+  return url
+})
+
+onMounted(() => {
+  try {
+    const cacheStr = localStorage.getItem(STORAGE_KEYS.HOME_INDEX_DATA)
+    if (cacheStr) {
+      const cache = JSON.parse(cacheStr)
+      groupChatQr.value = cache?.group_chat_qrcode || ''
+    }
+  } catch (error) {
+    console.error('读取群聊二维码失败:', error)
+  }
+})
 
 const saveQRCode = () => {
   // TODO: 实现保存二维码功能

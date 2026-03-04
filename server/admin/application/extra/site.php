@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'name' => '管理后台',
+  'name' => 'stock',
   'beian' => '',
   'cdnurl' => '',
   'version' => '1.0.115',
@@ -12,7 +12,7 @@ return array (
     'backend' => 'zh-cn',
     'frontend' => 'zh-cn',
   ),
-  'fixedpage' => 'tongji',
+  'fixedpage' => 'dashboard',
   'categorytype' => 
   array (
     'default' => 'Default',
@@ -41,4 +41,6 @@ return array (
     'category2' => 'Category2',
     'custom' => 'Custom',
   ),
+  'kefuurl' => 'http://m.baidu.com',
+  'groupqrcode' => '/uploads/20260223/ec98d56aa746db79427304242bd73d73.png',
 );

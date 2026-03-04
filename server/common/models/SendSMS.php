@@ -51,9 +51,9 @@ class SendSMS extends BaseModel {
 
         $security = $this->security;
 
-        // 优先从环境变量读取，否则使用属性值
-        $accessKeyId = getenv('ALIYUN_SMS_ACCESS_KEY_ID') ?: $this->accessKeyId;
-        $accessKeySecret = getenv('ALIYUN_SMS_ACCESS_KEY_SECRET') ?: $this->accessKeySecret;
+        // 从环境变量或Yii参数中读取AK信息
+        $accessKeyId = getenv('ALIYUN_SMS_ACCESS_KEY_ID') ?: (isset(\Yii::$app->params['aliyun_sms_key_id']) ? \Yii::$app->params['aliyun_sms_key_id'] : $this->accessKeyId);
+        $accessKeySecret = getenv('ALIYUN_SMS_ACCESS_KEY_SECRET') ?: (isset(\Yii::$app->params['aliyun_sms_key_secret']) ? \Yii::$app->params['aliyun_sms_key_secret'] : $this->accessKeySecret);
 
         // fixme 必填: 短信接收号码
         $params["PhoneNumbers"] = $phone;

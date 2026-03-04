@@ -81,14 +81,14 @@
       <div class="tab-item" @click="$router.push('/payment-progress')">
         <img :src="tab1Image" alt="tab1" class="tab-image" />
         <div class="tab-text">
-          <div class="tab-line1">款项进度服务</div>
+          <div class="tab-line1 back1">款项进度服务</div>
           <div class="tab-line2">立即查看 ></div>
         </div>
       </div>
       <div class="tab-item">
         <img :src="tab2Image" alt="tab2" class="tab-image" />
         <div class="tab-text">
-          <div class="tab-line1">退费办理窗口</div>
+          <div class="tab-line1 back2">退费办理窗口</div>
           <div class="tab-line2">立即查看 ></div>
         </div>
       </div>
@@ -123,6 +123,7 @@ import { useUserStore } from '@/stores/user'
 import { useWallet } from '@/composables/useWallet'
 import { showToast } from 'vant'
 import { formatPhone, formatIdCard } from '@/utils'
+import { config, STORAGE_KEYS } from '@/config'
 import profileBg from '@/assets/images/backgrounds/profile.png'
 import headImage from '@/assets/images/backgrounds/head.png'
 import copyIcon from '@/assets/icons/png/copy.png'
@@ -157,6 +158,9 @@ const nickname = computed(() => userInfo.value?.nickname || '用户昵称')
 const userId = computed(() => userInfo.value?.id || '')
 const userLevel = computed(() => userInfo.value?.level || '二级会员')
 
+// 基础配置信息（如客服链接、群聊图片等，从首页缓存 /home/index 获取）
+const baseInfo = ref({})
+
 // 格式化用户ID显示
 const displayUserId = computed(() => {
   if (userId.value) {
@@ -178,7 +182,7 @@ const displayUserId = computed(() => {
   return 'ID: 139****2864'
 })
 
-// 初始化用户信息
+// 初始化用户信息 & 基础配置
 onMounted(async () => {
   if (userStore.loggedIn && !userInfo.value) {
     try {
@@ -188,7 +192,19 @@ onMounted(async () => {
     }
   }
   // 获取钱包信息
-  await fetchWalletInfo()
+ //await fetchWalletInfo()
+  // 从本地缓存中读取首页基础配置信息（在 Home.vue 中已请求并写入）
+  try {
+    const cacheStr = localStorage.getItem(STORAGE_KEYS.HOME_INDEX_DATA)
+    if (cacheStr) {
+      const cache = JSON.parse(cacheStr)
+      if (cache && typeof cache === 'object') {
+        baseInfo.value = cache
+      }
+    }
+  } catch (error) {
+    console.error('读取基础配置信息缓存失败:', error)
+  }
 })
 
 const toolIcons = [icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10]
@@ -198,7 +214,7 @@ const tools = ref([
   { id: 2, name: '实名认证', icon: icon2, color: '#ff9800', route: '/realname' },
   { id: 3, name: '提现账户', icon: icon3, color: '#9c27b0', route: '/payment-accounts' },
   { id: 4, name: '修改密码', icon: icon4, color: '#4caf50', route: '/reset-password' },
-  { id: 5, name: '联系客服', icon: icon5, color: '#9c27b0', route: '/kefu' },
+  { id: 5, name: '联系客服', icon: icon5, color: '#9c27b0', action: 'customer_service' },
   { id: 6, name: '我的团队', icon: icon6, color: '#e53e3e', route: '/team' },
   { id: 7, name: '邀请好友', icon: icon7, color: '#2196f3', route: '/team/invite' },
   { id: 8, name: '资金明细', icon: icon8, color: '#ff9800', route: '/finance/fund-detail' },
@@ -210,8 +226,42 @@ const copyId = () => {
   showToast('ID已复制')
 }
 
+// 打开客服外部链接（来自 localStorage.homeIndexData.customer_service）
+const openCustomerService = () => {
+  let url = ''
+  try {
+    const cacheStr = localStorage.getItem(STORAGE_KEYS.HOME_INDEX_DATA)
+    if (cacheStr) {
+      const cache = JSON.parse(cacheStr)
+      url = cache?.customer_service || ''
+    }
+    // 兜底：如果已经在本页通过 baseInfo 读到了数据，也一起用上
+    if (!url && baseInfo.value && typeof baseInfo.value === 'object') {
+      url = baseInfo.value.customer_service || ''
+    }
+  } catch (error) {
+    console.error('读取客服链接失败:', error)
+  }
+
+  if (!url) {
+    showToast('客服链接未配置')
+    return
+  }
+
+  // 处理为前端可访问的完整地址
+  if (url.startsWith('/')) {
+    // 相对路径（如 /uploads/xxx），拼接后端域名
+    url = config.baseURL.replace(/\/+$/, '') + url
+  } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    // 纯域名或其他，补全协议
+    url = 'https://' + url
+  }
+
+  window.open(url, '_blank')
+}
+
 const showService = () => {
-  showToast('联系客服')
+  openCustomerService()
 }
 
 const viewProgress = () => {
@@ -231,6 +281,8 @@ const handleTool = async (tool) => {
     } catch (error) {
       console.error('退出登录失败:', error)
     }
+  } else if (tool.action === 'customer_service') {
+    openCustomerService()
   } else if (tool.route) {
     router.push(tool.route)
   } else {
@@ -474,9 +526,18 @@ const handleTool = async (tool) => {
 
 .tab-line1 {
   font-size: 14px;
-  font-weight: bold;
+  font-weight: bolder;
   margin-bottom: 4px;
   color: #514b4b;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+.back1{
+  background: #FBDCC7;
+}
+.back2{
+  background: #EEE3BD;
 }
 
 .tab-line2 {

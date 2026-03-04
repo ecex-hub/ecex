@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>资金统计报表</title>
+<style>
+    body {
+        margin: 0;
+        font-family: "Microsoft YaHei", Arial;
+        background: #f5f7fa;
+    }
+
+    .container {
+        width: 1400px;
+        margin: 30px auto;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .filter {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .filter input,
+    .filter select {
+        padding: 8px 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .btn {
+        background: #409EFF;
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn:hover {
+        background: #337ecc;
+    }
+
+    .stats {
+        display: flex;
+        gap: 20px;
+    }
+
+    .stat-box {
+        flex: 1;
+        background: linear-gradient(135deg, #409EFF, #66b1ff);
+        color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .stat-box.green {
+        background: linear-gradient(135deg, #67C23A, #95d475);
+    }
+
+    .stat-box.orange {
+        background: linear-gradient(135deg, #E6A23C, #ebb563);
+    }
+
+    .stat-box.red {
+        background: linear-gradient(135deg, #F56C6C, #f78989);
+    }
+
+    .stat-title {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .rate {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .chart {
+        height: 350px;
+        background: #f0f2f5;
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #999;
+        font-size: 18px;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 查询条件 -->
+    <div class="card">
+        <div class="title">查询条件</div>
+        <div class="filter">
+            <select>
+                <option>按天统计</option>
+                <option>按时间段统计</option>
+            </select>
+            <input type="date">
+            <span>至</span>
+            <input type="date">
+            <button class="btn">查询</button>
+        </div>
+    </div>
+
+    <!-- 投资统计 -->
+    <div class="card">
+        <div class="title">投资 → 实际利息统计</div>
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-title">投资总额</div>
+                <div class="stat-value">¥ 1,000,000</div>
+            </div>
+            <div class="stat-box green">
+                <div class="stat-title">实际产生利息</div>
+                <div class="stat-value">¥ 35,000</div>
+            </div>
+            <div class="stat-box orange">
+                <div class="stat-title">收益率</div>
+                <div class="stat-value">3.5%</div>
+                <div class="rate">利息 / 投资</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 充值统计 -->
+    <div class="card">
+        <div class="title">充值 → 提现统计</div>
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-title">充值总额</div>
+                <div class="stat-value">¥ 500,000</div>
+            </div>
+            <div class="stat-box red">
+                <div class="stat-title">提现总额</div>
+                <div class="stat-value">¥ 300,000</div>
+            </div>
+            <div class="stat-box orange">
+                <div class="stat-title">提现率</div>
+                <div class="stat-value">60%</div>
+                <div class="rate">提现 / 充值</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 趋势图 -->
+    <div class="card">
+        <div class="title">趋势图展示</div>
+        <div class="chart">
+            这里放折线图
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

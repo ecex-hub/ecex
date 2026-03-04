@@ -61,6 +61,7 @@ import { useRouter } from 'vue-router'
 import mallheadBg from '@/assets/images/backgrounds/mallhead.png'
 import emptyImg from '@/assets/icons/png/empty.png'
 import { mallApi } from '@/api'
+import { config } from '@/config'
 
 const router = useRouter()
 
@@ -169,13 +170,32 @@ const fetchProducts = async () => {
       size: 20
     })
     const list = res.data?.list || []
-    // 转成前端需要的字段结构
-    productList.value = list.map((item) => ({
-      id: item.id,
-      title: item.name, // 接口里是 name，这里统一映射为 title
-      points: item.points, // MallController 中已根据 price 计算 points
-      image: item.image
-    }))
+    // 转成前端需要的字段结构，并处理图片地址为前端可访问的完整 URL
+    productList.value = list.map((item) => {
+      let imageUrl = item.image || ''
+
+      if (imageUrl) {
+        if (imageUrl.startsWith('/')) {
+          // 相对路径（如 /uploads/xxx），拼接后端域名
+          imageUrl = config.baseURL.replace(/\/+$/, '') + imageUrl
+        } else if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+          // 纯文件名或相对路径，前置 /uploads/ 并拼接域名（根据后端上传规则可调整）
+          if (!imageUrl.startsWith('uploads/')) {
+            imageUrl = '/uploads/' + imageUrl
+          } else {
+            imageUrl = '/' + imageUrl
+          }
+          imageUrl = config.baseURL.replace(/\/+$/, '') + imageUrl
+        }
+      }
+
+      return {
+        id: item.id,
+        title: item.name, // 接口里是 name，这里统一映射为 title
+        points: item.points, // MallController 中已根据 price 计算 points
+        image: imageUrl
+      }
+    })
 
     // 等待 DOM 渲染完再计算瀑布流布局
     await nextTick()

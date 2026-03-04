@@ -130,6 +130,7 @@ import mallIcon from '@/assets/icons/png/menu/m.png'
 import newsImg from '@/assets/icons/png/newsimg.png'
 import emptyImg from '@/assets/icons/png/empty.png'
 import { newsApi, homeApi } from '@/api'
+import { STORAGE_KEYS } from '@/config'
 
 const router = useRouter()
 
@@ -146,7 +147,60 @@ const formatDate = (timestamp) => {
   return `${y}-${m}-${d}`
 }
 
-// 加载首页所有数据
+// 解析并使用统一首页数据
+const applyHomeIndexData = (data) => {
+  if (!data) return
+
+  // 处理轮播图数据
+  const banners = data.carousel || data.carousel || []
+  bannerList.value = banners.map(item => ({
+    id: item.id,
+    title: item.title || '',
+    picUrl: item.picUrl || '',
+    linkUrl: item.link_url || item.linkUrl || '',
+    targetType: item.target_type || item.targetType || 'internal'
+  }))
+
+  // 处理新闻数据
+  const news = data.news || data.newsList || []
+  newsList.value = news.slice(0, 3) // 只取前3条
+}
+
+// 加载首页所有数据（带本地缓存）
+const loadHomeData = async () => {
+  try {
+    // 1. 先尝试从本地缓存读取
+    const cacheStr = localStorage.getItem(STORAGE_KEYS.HOME_INDEX_DATA)
+    if (cacheStr) {
+      try {
+        const cache = JSON.parse(cacheStr)
+        applyHomeIndexData(cache)
+      } catch (e) {
+        console.error('解析本地首页缓存失败:', e)
+      }
+    }
+
+    // 2. 再请求最新数据（不管有没有缓存，都可以静默刷新一遍）
+    const res = await homeApi.getIndexData()
+    if (res?.data) {
+      // 写入本地缓存
+      try {
+        localStorage.setItem(STORAGE_KEYS.HOME_INDEX_DATA, JSON.stringify(res.data))
+      } catch (e) {
+        console.error('写入本地首页缓存失败:', e)
+      }
+      // 更新页面显示
+      applyHomeIndexData(res.data)
+    }
+  } catch (error) {
+    console.error('获取首页数据失败:', error)
+    // 降级处理：单独获取各部分数据
+    await loadFallbackData()
+  }
+}
+
+// 原始加载函数保留逻辑（已在上面拆分、并通过 applyHomeIndexData 复用）
+/*
 const loadHomeData = async () => {
   try {
     const res = await homeApi.getIndexData()
@@ -171,6 +225,7 @@ const loadHomeData = async () => {
     await loadFallbackData()
   }
 }
+*/
 
 // 降级数据加载（当统一接口失败时使用）
 const loadFallbackData = async () => {
